@@ -1383,6 +1383,7 @@ namespace D2AbilityCreator2
                     new MyCheckboxString(){ name = "TextureName", check = data.data.TryGetValue("TextureName", out _), str = MyMiniF(data.data,"TextureName") ?? "" },
                     new MyCheckboxString(){ name = "EffectName", check = data.data.TryGetValue("EffectName", out _), str = MyMiniF(data.data,"EffectName") ?? "" },
                     new MyCheckboxStringSelect(){ name = "EffectAttachType", check = data.data.TryGetValue("EffectAttachType", out _), str = MyMiniF(data.data,"EffectAttachType") ?? "", selectlist = EffectAttachTypeList },
+                    new MyCheckboxString(){ name = "ModelName", check = data.data.TryGetValue("ModelName", out _), str = MyMiniF(data.data,"ModelName") ?? "" },
                     new MyCheckboxString(){ name = "Aura", check = data.data.TryGetValue("Aura", out _), str = MyMiniF(data.data,"Aura") ?? "" },
                     new MyCheckboxString(){ name = "Aura_Radius", check = data.data.TryGetValue("Aura_Radius", out _), str = MyMiniF(data.data,"Aura_Radius") ?? "" },
                     new MyCheckboxStringSelect(){ name = "Aura_Teams", check = data.data.TryGetValue("Aura_Teams", out _), str = MyMiniF(data.data,"Aura_Teams") ?? "", selectlist = TeamsList },
