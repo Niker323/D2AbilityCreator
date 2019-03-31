@@ -623,7 +623,8 @@ namespace D2AbilityCreator2
         {
             "ITEM_NOT_SHAREABLE",
             "ITEM_PARTIALLY_SHAREABLE",
-            "ITEM_FULLY_SHAREABLE"
+            "ITEM_FULLY_SHAREABLE",
+            "ITEM_FULLY_SHAREABLE_STACKING"
         };
         string[] QualityList =
         {
@@ -1079,20 +1080,20 @@ namespace D2AbilityCreator2
         {
             menuStrip1.Visible = false;
             menuStrip2.Visible = false;
-            treeView1.Visible = false;
-            splitContainer1.Visible = false;
+            //treeView1.Visible = false;
+            splitContainer2.Visible = false;
             Button thisb = (Button)sender;
             object[] objlist = (object[])thisb.Tag;
             TextBox oldtextbox = (TextBox)objlist[0];
             TextBox newtextbox = new TextBox();
             newtextbox.Text = oldtextbox.Text;
             newtextbox.Location = new Point(20, 20);
-            newtextbox.Size = new Size(600, 24);
+            newtextbox.Size = new Size(700, 24);
             Controls.Add(newtextbox);
             newtextbox.BringToFront();
             Label newlabel = new Label();
-            newlabel.Text = "Find:";
-            newlabel.Location = new Point(20, 50);
+            newlabel.Text = "Search:";
+            newlabel.Location = new Point(20, 54);
             newlabel.Size = new Size(60, 24);
             Controls.Add(newlabel);
             newlabel.BringToFront();
@@ -1100,20 +1101,20 @@ namespace D2AbilityCreator2
             string[] strlist = (string[])objlist[1];
             newlistbox.Items.AddRange(strlist);
             newlistbox.Tag = strlist;
-            newlistbox.Location = new Point(20, 100);
+            newlistbox.Location = new Point(20, 85);
             newlistbox.Size = new Size(500, 400);
             Controls.Add(newlistbox);
             newlistbox.BringToFront();
             TextBox newtextbox2 = new TextBox();
-            newtextbox2.Location = new Point(100, 50);
-            newtextbox2.Size = new Size(300, 24);
+            newtextbox2.Location = new Point(70, 50);
+            newtextbox2.Size = new Size(320, 24);
             newtextbox2.TextChanged += FindChanged;
             newtextbox2.Tag = newlistbox;
             Controls.Add(newtextbox2);
             newtextbox2.BringToFront();
             Button newbutton = new Button();
-            newbutton.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
-            newbutton.Location = new Point(Form1.ActiveForm.Size.Width - 110, 53);
+            //newbutton.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
+            newbutton.Location = new Point(530, 93);
             newbutton.Size = new Size(80, 23);
             newbutton.Text = "Add";
             newbutton.Tag = new object[] { newlistbox, newtextbox };
@@ -1121,8 +1122,8 @@ namespace D2AbilityCreator2
             Controls.Add(newbutton);
             newbutton.BringToFront();
             Button newbutton2 = new Button();
-            newbutton2.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
-            newbutton2.Location = new Point(Form1.ActiveForm.Size.Width - 110, 83);
+            //newbutton2.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
+            newbutton2.Location = new Point(530, 123);
             newbutton2.Size = new Size(80, 23);
             newbutton2.Text = "Back";
             newbutton2.Tag = new object[] { oldtextbox, newtextbox, newlistbox, newbutton, newtextbox2, newlabel };
@@ -1182,8 +1183,8 @@ namespace D2AbilityCreator2
             newlabel.Dispose();
             menuStrip1.Visible = true;
             menuStrip2.Visible = true;
-            treeView1.Visible = true;
-            splitContainer1.Visible = true;
+            //treeView1.Visible = true;
+            splitContainer2.Visible = true;
         }
 
         public void CreateAbilityButtonClick(object sender, EventArgs e)
@@ -1717,6 +1718,7 @@ namespace D2AbilityCreator2
             TreeNode node = (TreeNode)thisb.Tag;
             string text = GetTextByNode(node, 0);
             RichTextBox newrtb = new RichTextBox();
+            newrtb.WordWrap = false;
             newrtb.Parent = splitContainer1.Panel2;
             newrtb.Dock = DockStyle.Fill;
             newrtb.Text = text;
@@ -2506,6 +2508,7 @@ namespace D2AbilityCreator2
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Version: 2.0\r\nCreator: Niker323", "About");
+            treeView1.Size = new Size(200,400);
         }
 
         private void donationAlertsToolStripMenuItem_Click(object sender, EventArgs e)

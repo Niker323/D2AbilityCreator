@@ -1,0 +1,10 @@
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\bin\Release\D2AbilityCreator2.exe.config
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\bin\Release\D2AbilityCreator2.exe
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\bin\Release\D2AbilityCreator2.pdb
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\obj\Release\D2AbilityCreator2.csprojAssemblyReference.cache
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\obj\Release\D2AbilityCreator2.Form1.resources
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\obj\Release\D2AbilityCreator2.Properties.Resources.resources
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\obj\Release\D2AbilityCreator2.csproj.GenerateResource.cache
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\obj\Release\D2AbilityCreator2.csproj.CoreCompileInputs.cache
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\obj\Release\D2AbilityCreator2.exe
+C:\Users\Niker323\source\repos\D2AbilityCreator2\D2AbilityCreator2\obj\Release\D2AbilityCreator2.pdb
