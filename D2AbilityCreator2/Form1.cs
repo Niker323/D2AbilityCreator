@@ -563,6 +563,7 @@ namespace D2AbilityCreator2
             "RemoveAbility",
             "RemoveModifier",
             "RunScript",
+            "SpendCharge",
             "SpawnUnit",
             "Stun",
             "TrackingProjectile"
@@ -589,6 +590,7 @@ namespace D2AbilityCreator2
             new string[]{ "Target", "AbilityName"},
             new string[]{ "Target", "ModifierName"},
             new string[]{ "Target", "ScriptFile", "Function"},
+            new string[]{ },
             new string[]{ "UnitName", "UnitCount", "UnitLimit", "SpawnRadius", "Duration", "Target", "GrantsGold", "GrantsXP"},
             new string[]{ "Target", "Duration"},
             new string[]{ "Target", "EffectName", "Dodgeable", "ProvidesVision", "VisionRadius", "MoveSpeed", "SourceAttachment" }
@@ -610,6 +612,32 @@ namespace D2AbilityCreator2
             "OnOrbImpact",
             "OnTakeDamage",
             "Orb",
+        };
+        string[] DeclarationList =
+        {
+            "DECLARE_PURCHASES_IN_SPEECH",
+            "DECLARE_PURCHASES_TO_SPECTATORS",
+            "DECLARE_PURCHASES_TO_TEAMMATES"
+        };
+        string[] ShareabilityList =
+        {
+            "ITEM_NOT_SHAREABLE",
+            "ITEM_PARTIALLY_SHAREABLE",
+            "ITEM_FULLY_SHAREABLE"
+        };
+        string[] QualityList =
+        {
+            "artifact",
+            "epic",
+            "rare",
+            "common",
+            "component",
+            "consumable"
+        };
+        string[] DisassembleRuleList =
+        {
+            "DOTA_ITEM_DISASSEMBLE_ALWAYS",
+            "DOTA_ITEM_DISASSEMBLE_NEVER"
         };
 
         //[0] == name
@@ -836,10 +864,11 @@ namespace D2AbilityCreator2
                     Array.Resize(ref nodes, nodes.Length + 1);
                     nodes[level + 1] = CreateAbility(nowselected.name, nowselected.data, nodes[level]);
                 }
-                //else if (value == "item_datadriven")
-                //{
-
-                //}
+                else if (value == "item_datadriven")
+                {
+                    Array.Resize(ref nodes, nodes.Length + 1);
+                    nodes[level + 1] = CreateItem(nowselected.name, nowselected.data, nodes[level]);
+                }
                 else
                 {
                     Array.Resize(ref nodes, nodes.Length + 1);
@@ -1244,6 +1273,83 @@ namespace D2AbilityCreator2
             return newnode.Name;
         }
 
+        public string CreateItem(string name, Dictionary<string, string> data, string nodename)
+        {
+            TreeNode newnode = new TreeNode();
+            if (nodename != null)
+            {
+                TreeNode[] neednode = treeView1.Nodes.Find(nodename, true);
+                newnode = neednode[0].Nodes.Add(name);
+                if (!neednode[0].IsExpanded)
+                    neednode[0].Toggle();
+            }
+            else
+            {
+                newnode = treeView1.Nodes.Add(name);
+            }
+            newnode.Name = "node" + nodenum;
+            nodenum++;
+            string[] ThisEventList = new string[3 + EventList.Length];
+            new string[] { "ItemRequirements", "AbilitySpecial", "Modifiers" }.CopyTo(ThisEventList, 0);
+            EventList.CopyTo(ThisEventList, 3);
+            newnode.Tag = new object[] {
+                    name,
+                    "item",
+                    new MyCheckboxString(){ name = "ID", check = data.TryGetValue("ID", out _), str = MyMiniF(data,"ID") ?? "" },
+                    new MyCheckboxString(){ name = "ItemRecipe", check = data.TryGetValue("ItemRecipe", out _), str = MyMiniF(data,"ItemRecipe") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemResult", check = data.TryGetValue("ItemResult", out _), str = MyMiniF(data,"ItemResult") ?? "" },
+                    new MyCheckboxString(){ name = "AbilityName", check = data.TryGetValue("AbilityName", out _), str = MyMiniF(data,"AbilityName") ?? "" },
+                    new MyStringSelect(){ name = "AbilityBehavior", str = MyMiniF(data,"AbilityBehavior") ?? "", selectlist = AbilityBehaviorSelectedList },
+                    new MyCheckboxStringSelect(){ name = "AbilityType", check = data.TryGetValue("AbilityType", out _), str = MyMiniF(data,"AbilityType") ?? "", selectlist = AbilityTypeSelectedList },
+                    new MyCheckboxStringSelect(){ name = "AbilityUnitTargetType", check = data.TryGetValue("AbilityUnitTargetType", out _), str = MyMiniF(data,"AbilityUnitTargetType") ?? "", selectlist = UnitTargetTypeSelectedList },
+                    new MyCheckboxStringSelect(){ name = "AbilityUnitTargetTeam", check = data.TryGetValue("AbilityUnitTargetTeam", out _), str = MyMiniF(data,"AbilityUnitTargetTeam") ?? "", selectlist = TeamsList },
+                    new MyCheckboxStringSelect(){ name = "AbilityUnitDamageType", check = data.TryGetValue("AbilityUnitDamageType", out _), str = MyMiniF(data,"AbilityUnitDamageType") ?? "", selectlist = DamageTypeSelectedList },
+                    new MyCheckboxStringSelect(){ name = "SpellImmunityType", check = data.TryGetValue("SpellImmunityType", out _), str = MyMiniF(data,"SpellImmunityType") ?? "", selectlist = SpellImmunityTypeList },
+                    new MyCheckboxString(){ name = "Model", check = data.TryGetValue("Model", out _), str = MyMiniF(data,"Model") ?? "" },
+                    new MyCheckboxString(){ name = "Effect", check = data.TryGetValue("Effect", out _), str = MyMiniF(data,"Effect") ?? "" },
+                    new MyCheckboxString(){ name = "AbilityTextureName", check = data.TryGetValue("AbilityTextureName", out _), str = MyMiniF(data,"AbilityTextureName") ?? "" },
+                    new MyCheckboxString(){ name = "MaxUpgradeLevel", check = data.TryGetValue("MaxUpgradeLevel", out _), str = MyMiniF(data,"MaxUpgradeLevel") ?? "1" },
+                    new MyCheckboxString(){ name = "ItemBaseLevel", check = data.TryGetValue("ItemBaseLevel", out _), str = MyMiniF(data,"ItemBaseLevel") ?? "1" },
+                    new MyCheckboxStringSelect(){ name = "AbilityCastAnimation", check = data.TryGetValue("AbilityCastAnimation", out _), str = MyMiniF(data,"AbilityCastAnimation") ?? "", selectlist = AbilityCastAnimationList },
+                    new MyCheckboxString(){ name = "AbilityCastRange", check = data.TryGetValue("AbilityCastRange", out _), str = MyMiniF(data,"AbilityCastRange") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityCastPoint", check = data.TryGetValue("AbilityCastPoint", out _), str = MyMiniF(data,"AbilityCastPoint") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityCooldown", check = data.TryGetValue("AbilityCooldown", out _), str = MyMiniF(data,"AbilityCooldown") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityManaCost", check = data.TryGetValue("AbilityManaCost", out _), str = MyMiniF(data,"AbilityManaCost") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityDamage", check = data.TryGetValue("AbilityDamage", out _), str = MyMiniF(data,"AbilityDamage") ?? "0" },
+                    new MyCheckboxString(){ name = "AOERadius", check = data.TryGetValue("AOERadius", out _), str = MyMiniF(data,"AOERadius") ?? "0" },
+                    new MyCheckboxStringSelect(){ name = "ItemDeclarations", check = data.TryGetValue("ItemDeclarations", out _), str = MyMiniF(data,"ItemDeclarations") ?? "0", selectlist = DeclarationList },
+                    new MyCheckboxString(){ name = "ItemPurchasable", check = data.TryGetValue("ItemPurchasable", out _), str = MyMiniF(data,"ItemPurchasable") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemKillable", check = data.TryGetValue("ItemKillable", out _), str = MyMiniF(data,"ItemKillable") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemSellable", check = data.TryGetValue("ItemSellable", out _), str = MyMiniF(data,"ItemSellable") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemDroppable", check = data.TryGetValue("ItemDroppable", out _), str = MyMiniF(data,"ItemDroppable") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemStackable", check = data.TryGetValue("ItemStackable", out _), str = MyMiniF(data,"ItemStackable") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemPermanent", check = data.TryGetValue("ItemPermanent", out _), str = MyMiniF(data,"ItemPermanent") ?? "0" },
+                    new MyCheckboxStringSelect(){ name = "ItemShareability", check = data.TryGetValue("ItemShareability", out _), str = MyMiniF(data,"ItemShareability") ?? "", selectlist = ShareabilityList },
+                    new MyCheckboxStringSelect(){ name = "ItemQuality", check = data.TryGetValue("ItemQuality", out _), str = MyMiniF(data,"ItemQuality") ?? "", selectlist = QualityList },
+                    new MyCheckboxStringSelect(){ name = "ItemDisassembleRule", check = data.TryGetValue("ItemDisassembleRule", out _), str = MyMiniF(data,"ItemDisassembleRule") ?? "", selectlist = DisassembleRuleList },
+                    new MyCheckboxString(){ name = "ItemShopTags", check = data.TryGetValue("ItemShopTags", out _), str = MyMiniF(data,"ItemShopTags") ?? "" },
+                    new MyCheckboxString(){ name = "ItemAliases", check = data.TryGetValue("ItemAliases", out _), str = MyMiniF(data,"ItemAliases") ?? "" },
+                    new MyCheckboxString(){ name = "InvalidHeroes", check = data.TryGetValue("InvalidHeroes", out _), str = MyMiniF(data,"InvalidHeroes") ?? "" },
+                    new MyCheckboxString(){ name = "ItemCost", check = data.TryGetValue("ItemCost", out _), str = MyMiniF(data,"ItemCost") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemStockMax", check = data.TryGetValue("ItemStockMax", out _), str = MyMiniF(data,"ItemStockMax") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemStockTime", check = data.TryGetValue("ItemStockTime", out _), str = MyMiniF(data,"ItemStockTime") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemStockInitial", check = data.TryGetValue("ItemStockInitial", out _), str = MyMiniF(data,"ItemStockInitial") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemInitialCharges", check = data.TryGetValue("ItemInitialCharges", out _), str = MyMiniF(data,"ItemInitialCharges") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemDisplayCharges", check = data.TryGetValue("ItemDisplayCharges", out _), str = MyMiniF(data,"ItemDisplayCharges") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemRequiresCharges", check = data.TryGetValue("ItemRequiresCharges", out _), str = MyMiniF(data,"ItemRequiresCharges") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemAlertable", check = data.TryGetValue("ItemAlertable", out _), str = MyMiniF(data,"ItemAlertable") ?? "0" },
+                    new MyCheckboxString(){ name = "ItemCastOnPickup", check = data.TryGetValue("ItemCastOnPickup", out _), str = MyMiniF(data,"ItemCastOnPickup") ?? "0" },
+                    new MyCheckboxString(){ name = "SideShop", check = data.TryGetValue("SideShop", out _), str = MyMiniF(data,"SideShop") ?? "0" },
+                    new MyCheckboxString(){ name = "SecretShop", check = data.TryGetValue("SecretShop", out _), str = MyMiniF(data,"SecretShop") ?? "0" },
+                    new MyCheckboxString(){ name = "UIPickupSound", check = data.TryGetValue("UIPickupSound", out _), str = MyMiniF(data,"UIPickupSound") ?? "" },
+                    new MyCheckboxString(){ name = "UIDropSound", check = data.TryGetValue("UIDropSound", out _), str = MyMiniF(data,"UIDropSound") ?? "" },
+                    new MyCheckboxString(){ name = "WorldDropSound", check = data.TryGetValue("WorldDropSound", out _), str = MyMiniF(data,"WorldDropSound") ?? "" },
+                    new MyCheckboxString(){ name = "PingOverrideText", check = data.TryGetValue("PingOverrideText", out _), str = MyMiniF(data,"PingOverrideText") ?? "" },
+                    new MyAddNodes(){ items = ThisEventList},
+                };
+            return newnode.Name;
+        }
+
         public string AddAbilityDataByObject(MyNodeData data, string nodename)
         {
             TreeNode[] neednode = treeView1.Nodes.Find(nodename, true);
@@ -1364,6 +1470,16 @@ namespace D2AbilityCreator2
                 Array.Resize(ref tagdata, tagdata.Length + 1);
                 tagdata[tagdata.Length - 1] = new MyAddStatesOrPropertiesNode() { name = data.name };
             }
+            if (data.name == "ItemRequirements")
+            {
+                Array.Resize(ref tagdata, tagdata.Length + 1);
+                tagdata[tagdata.Length - 1] = new MyAddItemRequirementsNode();
+            }
+            if (data.name == "AbilitySpecial")
+            {
+                Array.Resize(ref tagdata, tagdata.Length + 1);
+                tagdata[tagdata.Length - 1] = new MyAddAbilitySpecialNode();
+            }
             if (data.name == "Action")
             {
                 Array.Resize(ref tagdata, tagdata.Length + 1);
@@ -1447,6 +1563,28 @@ namespace D2AbilityCreator2
             newnode.data["var_type"] = "";
             newnode.data[""] = "";
             AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+        }
+
+        public void AddItemRequirements(object sender, EventArgs e)
+        {
+            ClearPanels();
+            TreeNode selnode = treeView1.SelectedNode;
+            object[] nodetag = (object[])selnode.Tag;
+            Array.Resize(ref nodetag, nodetag.Length + 1);
+            nodetag[nodetag.Length - 1] = nodetag[nodetag.Length - 2];
+            string col = "";
+            if (nodetag.Length - 2 < 10)
+            {
+                col = "0" + (nodetag.Length - 2);
+            }
+            else
+            {
+                col = (nodetag.Length - 2).ToString();
+            }
+            nodetag[nodetag.Length - 2] = new MyCheckboxStringString() { check = false, name = "", str1 = col, str2 = "" };
+            selnode.Tag = nodetag;
+            treeView1.SelectedNode = null;
+            treeView1.SelectedNode = selnode;
         }
 
         public void AddStateOrPropertie(object sender, EventArgs e)
@@ -1544,12 +1682,31 @@ namespace D2AbilityCreator2
             }
         }
 
-        public void CreateItem(object sender, EventArgs e)
+        public void CreateItemButtonClick(object sender, EventArgs e)
         {
             TextBox namebox = (TextBox)splitContainer1.Panel2.Tag;
-            string name = namebox.Text;
-            ClearPanels();
-            //Debug.WriteLine(name);
+            if (namebox.Text != "")
+            {
+                if (namebox.Text.IndexOf("item_") == 0)
+                {
+                    TreeNode[] neednode = treeView1.Nodes.Find(CreateItem(namebox.Text, new Dictionary<string, string>(), null), true);
+                    treeView1.SelectedNode = neednode[0];
+                }
+                else
+                {
+                    //MessageBox.Show("Invalid name!\r\nAt the beginning of the item name should be 'item_'", "Error");
+                    DialogResult dialogResult = MessageBox.Show("Invalid name!\r\nAt the beginning of the item name should be 'item_'\r\nAdd?", "Error", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        TreeNode[] neednode = treeView1.Nodes.Find(CreateItem("item_"+namebox.Text, new Dictionary<string, string>(), null), true);
+                        treeView1.SelectedNode = neednode[0];
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid name!", "Error");
+            }
         }
 
         public void CreateText(object sender, EventArgs e)
@@ -1579,7 +1736,10 @@ namespace D2AbilityCreator2
             if (level == 0)
             {
                 readytext = readytext + "\r\n" + otstup + "//Created by D2AbilityCreator 2.0";
-                readytext = readytext + "\r\n" + otstup + '"'+ "BaseClass" + '"'+ "\t\t" + '"' + "ability_datadriven" + '"';
+                if ((string)data[1] == "ability")
+                    readytext = readytext + "\r\n" + otstup + '"'+ "BaseClass" + '"'+ "\t\t" + '"' + "ability_datadriven" + '"';
+                else if ((string)data[1] == "item")
+                    readytext = readytext + "\r\n" + otstup + '"' + "BaseClass" + '"' + "\t\t" + '"' + "item_datadriven" + '"';
             }
             for (int i = 2; data.Length > i; i++)
             {
@@ -1740,7 +1900,7 @@ namespace D2AbilityCreator2
             newbutton2.Location = new Point(350, 3);
             newbutton2.Size = new Size(100, 24);
             newbutton2.Text = "Create item";
-            newbutton2.Click += CreateItem;
+            newbutton2.Click += CreateItemButtonClick;
             newbutton2.Parent = splitContainer1.Panel2;
             //splitContainer1.Panel1.
         }
@@ -1795,12 +1955,12 @@ namespace D2AbilityCreator2
                 newbutton2.Click += LoadFileInfo;
                 newbutton2.Parent = splitContainer1.Panel2;
             }
-            else if ((string)data[1] == "ability" || (string)data[1] == "abilitydata" || (string)data[1] == "modifier")
+            else if ((string)data[1] == "ability" || (string)data[1] == "item" || (string)data[1] == "abilitydata" || (string)data[1] == "modifier")
             {
                 selectednode = e.Node.Name;
                 object[] newdata = new object[0];
                 object[] menutag = new object[0] {};
-                if((string)data[1] == "ability")
+                if((string)data[1] == "ability" || (string)data[1] == "item")
                 {
                     ToolStripItem newitem2 = menuStrip2.Items.Add("Create");
                     newitem2.Alignment = ToolStripItemAlignment.Right;
@@ -2208,10 +2368,28 @@ namespace D2AbilityCreator2
                         Array.Resize(ref newdata, newdata.Length + 1);
                         newdata[i - 2] = new object[] { };
                     }
+
+                    if (data[i].GetType() == typeof(MyAddItemRequirementsNode))
+                    {
+                        Button newbutton1 = new Button();
+                        newbutton1.BackColor = Color.LightGray;
+                        newbutton1.Location = new Point(30, (30 * (i - 2)) + 3);
+                        newbutton1.Size = new Size(200, 23);
+                        newbutton1.Text = "Add ItemRequirements";
+                        newbutton1.Click += AddItemRequirements;
+                        newbutton1.Parent = splitContainer1.Panel2;
+
+                        Array.Resize(ref newdata, newdata.Length + 1);
+                        newdata[i - 2] = new object[] { };
+                    }
                 }
                 splitContainer1.Panel2.Tag = newdata;
                 menuStrip2.Tag = menutag;
             }
+        }
+
+        public class MyAddItemRequirementsNode
+        {
         }
 
         public class MyAddActionNode
@@ -2315,12 +2493,29 @@ namespace D2AbilityCreator2
 
         private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ClearPanels();
             treeView1.CollapseAll();
         }
 
         private void expandAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ClearPanels();
             treeView1.ExpandAll();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Version: 2.0\r\nCreator: Niker323", "About");
+        }
+
+        private void donationAlertsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.donationalerts.com/r/niker323");
+        }
+
+        private void patreonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.patreon.com/nikergames");
         }
     }
 }
