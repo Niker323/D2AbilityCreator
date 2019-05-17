@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace D2AbilityCreator2
 {
@@ -545,54 +547,70 @@ namespace D2AbilityCreator2
             "AddAbility",
             "ActOnTargets",
             "ApplyModifier",
+            "ApplyMotionController",
             "AttachEffect",
             "Blink",
             "CleaveAttack",
+            "CreateBonusAttack",
             "CreateThinker",
+            "CreateThinkerWall",
+            "CreateItem",
             "Damage",
             "DelayedAction",
             "DestroyTrees",
             "FireEffect",
             "FireSound",
             "Heal",
+            "IsCasterAlive",
             "Knockback",
             "LevelUpAbility",
             "Lifesteal",
             "LinearProjectile",
+            "MoveUnit",
             "Random",
             "RemoveAbility",
             "RemoveModifier",
+            "RemoveUnit",
             "RunScript",
             "SpendCharge",
             "SpawnUnit",
             "Stun",
+            "SpendMana",
             "TrackingProjectile"
         };
         object[] ActionPropertiesList = new object[] {
             new string[]{ "Target", "AbilityName" },
             new string[]{"Action"},
             new string[]{ "Target", "ModifierName"},
+            new string[]{ "Target", "ScriptFile", "HorizontalControlFunction", "VerticalControlFunction", "TestGravityFunc"},
             new string[]{ "EffectName", "EffectAttachType", "Target", "ControlPoints", "TargetPoint", "EffectRadius", "EffectDurationScale", "EffectLifeDurationScale", "EffectColorA", "EffectColorB", "EffectAlphaScale"},
             new string[]{"Target"},
             new string[]{ "CleavePercent", "CleaveRadius"},
+            new string[]{ "Target"},
             new string[]{ "Target", "ModifierName"},
+            new string[]{ "Target", "ModifierName", "Width", "Length", "Rotation"},
+            new string[]{ "Target", "ItemName", "ItemCount", "ItemChargeCount", "SpawnRadius", "LaunchHeight", "LaunchDistance", "LaunchDuration"},
             new string[]{ "Target", "Type", "MinDamage", "MaxDamage", "Damage", "CurrentHealthPercentBasedDamage", "MaxHealthPercentBasedDamage"},
             new string[]{ "Delay", "Action"},
             new string[]{ "Target", "Radius"},
             new string[]{ "EffectName", "EffectAttachType", "Target", "ControlPoints", "TargetPoint", "EffectRadius", "EffectDurationScale", "EffectLifeDurationScale", "EffectColorA", "EffectColorB", "EffectAlphaScale"},
             new string[]{ "EffectName", "Target"},
             new string[]{ "HealAmount", "Target"},
+            new string[]{ },
             new string[]{ "Target", "Center", "Duration", "Distance", "Height", "IsFixedDistance", "ShouldStun"},
             new string[]{ "Target", "AbilityName"},
             new string[]{ "Target", "LifestealPercent"},
             new string[]{ "Target", "EffectName", "MoveSpeed", "StartRadius", "EndRadius", "FixedDistance", "StartPosition", "TargetTeams", "TargetTypes", "TargetFlags", "HasFrontalCone", "ProvidesVision", "VisionRadius"},
+            new string[]{ "Target", "MoveToTarget"},
             new string[]{ "Chance", "PseudoRandom", "OnSuccess", "OnFailure"},
             new string[]{ "Target", "AbilityName"},
             new string[]{ "Target", "ModifierName"},
+            new string[]{ "Target"},
             new string[]{ "Target", "ScriptFile", "Function"},
             new string[]{ },
             new string[]{ "UnitName", "UnitCount", "UnitLimit", "SpawnRadius", "Duration", "Target", "GrantsGold", "GrantsXP"},
             new string[]{ "Target", "Duration"},
+            new string[]{ "Mana"},
             new string[]{ "Target", "EffectName", "Dodgeable", "ProvidesVision", "VisionRadius", "MoveSpeed", "SourceAttachment" }
         };
         string[] ModifierEventList = new string[]
@@ -1217,38 +1235,10 @@ namespace D2AbilityCreator2
             }
             newnode.Name = "node" + nodenum;
             nodenum++;
-            //if (data == null)
-            //{
-            //    ClearPanels();
-            //    newnode.Tag = new object[] {
-            //        name,
-            //        "ability",
-            //        new MyCheckboxString(){ name = "ID", check = false, str = "" },
-            //        new MyStringSelect(){ name = "AbilityBehavior", str = "", selectlist = AbilityBehaviorSelectedList },
-            //        new MyCheckboxStringSelect(){ name = "AbilityType", check = false, str = "", selectlist = AbilityTypeSelectedList },
-            //        new MyCheckboxStringSelect(){ name = "AbilityUnitTargetType", check = false, str = "", selectlist = UnitTargetTypeSelectedList },
-            //        new MyCheckboxStringSelect(){ name = "AbilityUnitTargetTeam", check = false, str = "", selectlist = TeamsList },
-            //        new MyCheckboxStringSelect(){ name = "AbilityUnitDamageType", check = false, str = "", selectlist = DamageTypeSelectedList },
-            //        new MyCheckboxStringSelect(){ name = "SpellImmunityType", check = false, str = "", selectlist = SpellImmunityTypeList },
-            //        new MyCheckboxString(){ name = "IsOnCastBar", check = false, str = "1" },
-            //        new MyCheckboxString(){ name = "AbilityTextureName", check = false, str = "" },
-            //        new MyCheckboxString(){ name = "MaxLevel", check = false, str = "1" },
-            //        new MyCheckboxStringSelect(){ name = "AbilityCastAnimation", check = false, str = "", selectlist = AbilityCastAnimationList },
-            //        new MyCheckboxString(){ name = "AbilityCastRange", check = false, str = "0" },
-            //        new MyCheckboxString(){ name = "AbilityCastPoint", check = false, str = "0" },
-            //        new MyCheckboxString(){ name = "AbilityCooldown", check = false, str = "0" },
-            //        new MyCheckboxString(){ name = "AbilityManaCost", check = false, str = "0" },
-            //        new MyCheckboxString(){ name = "AbilityDamage", check = false, str = "0" },
-            //        new MyCheckboxString(){ name = "AOERadius", check = false, str = "0" },
-            //    };
-            //    treeView1.SelectedNode = newnode;
-            //}
-            //else
-            //{
             string[] ThisEventList = new string[2 + EventList.Length];
             new string[] { "AbilitySpecial", "Modifiers" }.CopyTo(ThisEventList, 0);
             EventList.CopyTo(ThisEventList, 2);
-            newnode.Tag = new object[] {
+            object[] tagobj = new object[] {
                     name,
                     "ability",
                     new MyCheckboxString(){ name = "ID", check = data.TryGetValue("ID", out _), str = MyMiniF(data,"ID") ?? "" },
@@ -1258,20 +1248,91 @@ namespace D2AbilityCreator2
                     new MyCheckboxStringSelect(){ name = "AbilityUnitTargetTeam", check = data.TryGetValue("AbilityUnitTargetTeam", out _), str = MyMiniF(data,"AbilityUnitTargetTeam") ?? "", selectlist = TeamsList },
                     new MyCheckboxStringSelect(){ name = "AbilityUnitDamageType", check = data.TryGetValue("AbilityUnitDamageType", out _), str = MyMiniF(data,"AbilityUnitDamageType") ?? "", selectlist = DamageTypeSelectedList },
                     new MyCheckboxStringSelect(){ name = "SpellImmunityType", check = data.TryGetValue("SpellImmunityType", out _), str = MyMiniF(data,"SpellImmunityType") ?? "", selectlist = SpellImmunityTypeList },
+                    new MyCheckboxString(){ name = "CastFilterRejectCaster", check = data.TryGetValue("CastFilterRejectCaster", out _), str = MyMiniF(data,"CastFilterRejectCaster") ?? "1" },
+                    new MyCheckboxString(){ name = "IsCastableWhileHidden", check = data.TryGetValue("IsCastableWhileHidden", out _), str = MyMiniF(data,"IsCastableWhileHidden") ?? "1" },
                     new MyCheckboxString(){ name = "IsOnCastBar", check = data.TryGetValue("IsOnCastBar", out _), str = MyMiniF(data,"IsOnCastBar") ?? "1" },
+                    new MyCheckboxString(){ name = "IsOnLearnbar", check = data.TryGetValue("IsOnLearnbar", out _), str = MyMiniF(data,"IsOnLearnbar") ?? "1" },
                     new MyCheckboxString(){ name = "AbilityTextureName", check = data.TryGetValue("AbilityTextureName", out _), str = MyMiniF(data,"AbilityTextureName") ?? "" },
                     new MyCheckboxString(){ name = "MaxLevel", check = data.TryGetValue("MaxLevel", out _), str = MyMiniF(data,"MaxLevel") ?? "1" },
+                    new MyCheckboxString(){ name = "RequiredLevel", check = data.TryGetValue("RequiredLevel", out _), str = MyMiniF(data,"RequiredLevel") ?? "" },
+                    new MyCheckboxString(){ name = "LevelsBetweenUpgrades", check = data.TryGetValue("LevelsBetweenUpgrades", out _), str = MyMiniF(data,"LevelsBetweenUpgrades") ?? "" },
                     new MyCheckboxStringSelect(){ name = "AbilityCastAnimation", check = data.TryGetValue("AbilityCastAnimation", out _), str = MyMiniF(data,"AbilityCastAnimation") ?? "", selectlist = AbilityCastAnimationList },
+                    new MyCheckboxString(){ name = "AnimationPlaybackRate", check = data.TryGetValue("AnimationPlaybackRate", out _), str = MyMiniF(data,"AnimationPlaybackRate") ?? "1" },
+                    new MyCheckboxString(){ name = "AnimationIgnoresModelScale", check = data.TryGetValue("AnimationIgnoresModelScale", out _), str = MyMiniF(data,"AnimationIgnoresModelScale") ?? "1" },
                     new MyCheckboxString(){ name = "AbilityCastRange", check = data.TryGetValue("AbilityCastRange", out _), str = MyMiniF(data,"AbilityCastRange") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityCastRangeBuffer", check = data.TryGetValue("AbilityCastRangeBuffer", out _), str = MyMiniF(data,"AbilityCastRangeBuffer") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityCastMinimumRange", check = data.TryGetValue("AbilityCastMinimumRange", out _), str = MyMiniF(data,"AbilityCastMinimumRange") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityChannelTime", check = data.TryGetValue("AbilityChannelTime", out _), str = MyMiniF(data,"AbilityChannelTime") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityChannelledManaCostPerSecond", check = data.TryGetValue("AbilityChannelledManaCostPerSecond", out _), str = MyMiniF(data,"AbilityChannelledManaCostPerSecond") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityDuration", check = data.TryGetValue("AbilityDuration", out _), str = MyMiniF(data,"AbilityDuration") ?? "0" },
                     new MyCheckboxString(){ name = "AbilityCastPoint", check = data.TryGetValue("AbilityCastPoint", out _), str = MyMiniF(data,"AbilityCastPoint") ?? "0" },
                     new MyCheckboxString(){ name = "AbilityCooldown", check = data.TryGetValue("AbilityCooldown", out _), str = MyMiniF(data,"AbilityCooldown") ?? "0" },
                     new MyCheckboxString(){ name = "AbilityManaCost", check = data.TryGetValue("AbilityManaCost", out _), str = MyMiniF(data,"AbilityManaCost") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityGoldCost", check = data.TryGetValue("AbilityGoldCost", out _), str = MyMiniF(data,"AbilityGoldCost") ?? "0" },
+                    new MyCheckboxString(){ name = "AbilityUpgradeGoldCost", check = data.TryGetValue("AbilityUpgradeGoldCost", out _), str = MyMiniF(data,"AbilityUpgradeGoldCost") ?? "0" },
                     new MyCheckboxString(){ name = "AbilityDamage", check = data.TryGetValue("AbilityDamage", out _), str = MyMiniF(data,"AbilityDamage") ?? "0" },
                     new MyCheckboxString(){ name = "AOERadius", check = data.TryGetValue("AOERadius", out _), str = MyMiniF(data,"AOERadius") ?? "0" },
-                    new MyAddNodes(){ items = ThisEventList},
+                    new MyCheckboxString(){ name = "AbilityProcsMagicStick", check = data.TryGetValue("AbilityProcsMagicStick", out _), str = MyMiniF(data,"AbilityProcsMagicStick") ?? "1" },
+                    new MyCheckboxString(){ name = "HotKeyOverride", check = data.TryGetValue("HotKeyOverride", out _), str = MyMiniF(data,"HotKeyOverride") ?? "" },
+                    new MyCheckboxString(){ name = "DisplayAdditionalHeroes", check = data.TryGetValue("DisplayAdditionalHeroes", out _), str = MyMiniF(data,"DisplayAdditionalHeroes") ?? "1" },
                 };
-            //}
+            data = DeleteItems(data, new string[] {
+                "BaseClass",
+                "ID",
+                "AbilityBehavior",
+                "AbilityType",
+                "AbilityUnitTargetType",
+                "AbilityUnitTargetTeam",
+                "AbilityUnitDamageType",
+                "SpellImmunityType",
+                "CastFilterRejectCaster",
+                "IsCastableWhileHidden",
+                "IsOnCastBar",
+                "IsOnLearnbar",
+                "AbilityTextureName",
+                "MaxLevel",
+                "RequiredLevel",
+                "LevelsBetweenUpgrades",
+                "AbilityCastAnimation",
+                "AnimationPlaybackRate",
+                "AnimationIgnoresModelScale",
+                "AbilityCastRange",
+                "AbilityCastRangeBuffer",
+                "AbilityCastMinimumRange",
+                "AbilityChannelTime",
+                "AbilityChannelledManaCostPerSecond",
+                "AbilityDuration",
+                "AbilityCastPoint",
+                "AbilityCooldown",
+                "AbilityManaCost",
+                "AbilityGoldCost",
+                "AbilityUpgradeGoldCost",
+                "AbilityDamage",
+                "AOERadius",
+                "AbilityProcsMagicStick",
+                "HotKeyOverride",
+                "DisplayAdditionalHeroes"
+            });
+            Array.Resize(ref tagobj, tagobj.Length + data.Count + 1);
+            if (data.Count > 0)
+            {
+                for (int i = 0; data.Count > i; i++)
+                {
+                    tagobj[tagobj.Length+i-(data.Count+1)] = new MyCheckboxString() { name = data.ElementAt(i).Key, check = true, str = data.ElementAt(i).Value };
+                }
+            }
+            tagobj[tagobj.Length - 1] = new MyAddNodes() { items = ThisEventList };
+            newnode.Tag = tagobj;
             return newnode.Name;
+        }
+
+        public Dictionary<string, string> DeleteItems(Dictionary<string, string> data, string[] deletelist)
+        {
+            for (int i = 0; deletelist.Length > i; i++)
+            {
+                data.Remove(deletelist[i]);
+            }
+            return data;
         }
 
         public string CreateItem(string name, Dictionary<string, string> data, string nodename)
@@ -1293,7 +1354,7 @@ namespace D2AbilityCreator2
             string[] ThisEventList = new string[3 + EventList.Length];
             new string[] { "ItemRequirements", "AbilitySpecial", "Modifiers" }.CopyTo(ThisEventList, 0);
             EventList.CopyTo(ThisEventList, 3);
-            newnode.Tag = new object[] {
+            object[] tagobj = new object[] {
                     name,
                     "item",
                     new MyCheckboxString(){ name = "ID", check = data.TryGetValue("ID", out _), str = MyMiniF(data,"ID") ?? "" },
@@ -1306,6 +1367,7 @@ namespace D2AbilityCreator2
                     new MyCheckboxStringSelect(){ name = "AbilityUnitTargetTeam", check = data.TryGetValue("AbilityUnitTargetTeam", out _), str = MyMiniF(data,"AbilityUnitTargetTeam") ?? "", selectlist = TeamsList },
                     new MyCheckboxStringSelect(){ name = "AbilityUnitDamageType", check = data.TryGetValue("AbilityUnitDamageType", out _), str = MyMiniF(data,"AbilityUnitDamageType") ?? "", selectlist = DamageTypeSelectedList },
                     new MyCheckboxStringSelect(){ name = "SpellImmunityType", check = data.TryGetValue("SpellImmunityType", out _), str = MyMiniF(data,"SpellImmunityType") ?? "", selectlist = SpellImmunityTypeList },
+                    new MyCheckboxString(){ name = "CastFilterRejectCaster", check = data.TryGetValue("CastFilterRejectCaster", out _), str = MyMiniF(data,"CastFilterRejectCaster") ?? "" },
                     new MyCheckboxString(){ name = "Model", check = data.TryGetValue("Model", out _), str = MyMiniF(data,"Model") ?? "" },
                     new MyCheckboxString(){ name = "Effect", check = data.TryGetValue("Effect", out _), str = MyMiniF(data,"Effect") ?? "" },
                     new MyCheckboxString(){ name = "AbilityTextureName", check = data.TryGetValue("AbilityTextureName", out _), str = MyMiniF(data,"AbilityTextureName") ?? "" },
@@ -1346,8 +1408,71 @@ namespace D2AbilityCreator2
                     new MyCheckboxString(){ name = "UIDropSound", check = data.TryGetValue("UIDropSound", out _), str = MyMiniF(data,"UIDropSound") ?? "" },
                     new MyCheckboxString(){ name = "WorldDropSound", check = data.TryGetValue("WorldDropSound", out _), str = MyMiniF(data,"WorldDropSound") ?? "" },
                     new MyCheckboxString(){ name = "PingOverrideText", check = data.TryGetValue("PingOverrideText", out _), str = MyMiniF(data,"PingOverrideText") ?? "" },
-                    new MyAddNodes(){ items = ThisEventList},
                 };
+            data = DeleteItems(data, new string[] {
+                "BaseClass",
+                "ID",
+                "ItemRecipe",
+                "ItemResult",
+                "AbilityName",
+                "AbilityBehavior",
+                "AbilityType",
+                "AbilityUnitTargetType",
+                "AbilityUnitTargetTeam",
+                "AbilityUnitDamageType",
+                "SpellImmunityType",
+                "CastFilterRejectCaster",
+                "Model",
+                "Effect",
+                "AbilityTextureName",
+                "MaxUpgradeLevel",
+                "ItemBaseLevel",
+                "AbilityCastAnimation",
+                "AbilityCastRange",
+                "AbilityCastPoint",
+                "AbilityCooldown",
+                "AbilityManaCost",
+                "AbilityDamage",
+                "AOERadius",
+                "ItemDeclarations",
+                "ItemPurchasable",
+                "ItemKillable",
+                "ItemSellable",
+                "ItemDroppable",
+                "ItemStackable",
+                "ItemPermanent",
+                "ItemShareability",
+                "ItemQuality",
+                "ItemDisassembleRule",
+                "ItemShopTags",
+                "ItemAliases",
+                "InvalidHeroes",
+                "ItemCost",
+                "ItemStockMax",
+                "ItemStockTime",
+                "ItemStockInitial",
+                "ItemInitialCharges",
+                "ItemDisplayCharges",
+                "ItemRequiresCharges",
+                "ItemAlertable",
+                "ItemCastOnPickup",
+                "SideShop",
+                "SecretShop",
+                "UIPickupSound",
+                "UIDropSound",
+                "WorldDropSound",
+                "PingOverrideText"
+            });
+            Array.Resize(ref tagobj, tagobj.Length + data.Count + 1);
+            if (data.Count > 0)
+            {
+                for (int i = 0; data.Count > i; i++)
+                {
+                    tagobj[tagobj.Length + i - (data.Count + 1)] = new MyCheckboxString() { name = data.ElementAt(i).Key, check = true, str = data.ElementAt(i).Value };
+                }
+            }
+            tagobj[tagobj.Length - 1] = new MyAddNodes() { items = ThisEventList };
+            newnode.Tag = tagobj;
             return newnode.Name;
         }
 
@@ -1391,8 +1516,37 @@ namespace D2AbilityCreator2
                     new MyCheckboxStringSelect(){ name = "Aura_Flags", check = data.data.TryGetValue("Aura_Flags", out _), str = MyMiniF(data.data,"Aura_Flags") ?? "", selectlist = FlagList },
                     new MyCheckboxString(){ name = "Aura_ApplyToCaster", check = data.data.TryGetValue("Aura_ApplyToCaster", out _), str = MyMiniF(data.data,"Aura_ApplyToCaster") ?? "1" },
                     new MyCheckboxString(){ name = "ThinkInterval", check = data.data.TryGetValue("ThinkInterval", out _), str = MyMiniF(data.data,"ThinkInterval") ?? "" },
-                    new MyAddNodes(){ items = ThisEventList},
                 };
+                data.data = DeleteItems(data.data, new string[] {
+                    "Passive",
+                    "IsBuff",
+                    "IsDebuff",
+                    "IsHidden",
+                    "IsPurgable",
+                    "OverrideAnimation",
+                    "Duration",
+                    "Attributes",
+                    "TextureName",
+                    "EffectName",
+                    "EffectAttachType",
+                    "ModelName",
+                    "Aura",
+                    "Aura_Radius",
+                    "Aura_Teams",
+                    "Aura_Types",
+                    "Aura_Flags",
+                    "Aura_ApplyToCaster",
+                    "ThinkInterval"
+                });
+                Array.Resize(ref tagdata, tagdata.Length + data.data.Count + 1);
+                if (data.data.Count > 0)
+                {
+                    for (int i = 0; data.data.Count > i; i++)
+                    {
+                        tagdata[tagdata.Length + i - (data.data.Count + 1)] = new MyCheckboxString() { name = data.data.ElementAt(i).Key, check = true, str = data.data.ElementAt(i).Value };
+                    }
+                }
+                tagdata[tagdata.Length - 1] = new MyAddNodes() { items = ThisEventList };
             }
             else if(data.name == "Modifiers")
             {
@@ -1430,15 +1584,15 @@ namespace D2AbilityCreator2
                         {
                             tagdata[tagdata.Length - 1] = new MyCheckboxString() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value };
                         }
-                        else if (data.data.ElementAt(i).Key == "TargetTeams")
+                        else if (data.data.ElementAt(i).Key == "TargetTeams" || data.data.ElementAt(i).Key == "Teams")
                         {
                             tagdata[tagdata.Length - 1] = new MyCheckboxStringSelect() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value, selectlist = TeamsList };
                         }
-                        else if (data.data.ElementAt(i).Key == "TargetTypes")
+                        else if (data.data.ElementAt(i).Key == "TargetTypes" || data.data.ElementAt(i).Key == "Types" || data.data.ElementAt(i).Key == "ExcludeTypes")
                         {
                             tagdata[tagdata.Length - 1] = new MyCheckboxStringSelect() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value, selectlist = AbilityTypeSelectedList };
                         }
-                        else if (data.data.ElementAt(i).Key == "TargetFlags")
+                        else if (data.data.ElementAt(i).Key == "TargetFlags" || data.data.ElementAt(i).Key == "Flags" || data.data.ElementAt(i).Key == "ExcludeFlags" || data.data.ElementAt(i).Key == "Flag")
                         {
                             tagdata[tagdata.Length - 1] = new MyCheckboxStringSelect() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value, selectlist = FlagList };
                         }
@@ -1453,6 +1607,10 @@ namespace D2AbilityCreator2
                         else if (data.data.ElementAt(i).Key == "ScriptFile")
                         {
                             tagdata[tagdata.Length - 1] = new MyCheckboxStringOpen() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value };
+                        }
+                        else if (data.data.ElementAt(i).Key == "Type")
+                        {
+                            tagdata[tagdata.Length - 1] = new MyCheckboxStringSelect() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value, selectlist = DamageTypeSelectedList };
                         }
                         else if (data.data.ElementAt(i).Key == "var_type")
                         {
@@ -1624,7 +1782,12 @@ namespace D2AbilityCreator2
                     newnode2.data["Center"] = "";
                     newnode2.data["Radius"] = "";
                     newnode2.data["Teams"] = "";
-                    newnode2.data["Type"] = "";
+                    newnode2.data["Flags"] = "";
+                    newnode2.data["ExcludeFlags"] = "";
+                    newnode2.data["Types"] = "";
+                    newnode2.data["ExcludeTypes"] = "";
+                    newnode2.data["MaxTargets"] = "";
+                    newnode2.data["Random"] = "";
                     MyNodeData newnode3 = new MyNodeData();
                     newnode3.name = "Action";
                     newnode3.data = new Dictionary<string, string>();
@@ -1643,6 +1806,20 @@ namespace D2AbilityCreator2
                 {
                     newnode.data["Chance"] = "";
                     newnode.data["PseudoRandom"] = "";
+                    string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+                    MyNodeData newnode2 = new MyNodeData();
+                    newnode2.name = "OnSuccess";
+                    newnode2.data = new Dictionary<string, string>();
+                    newnode2.data["Action"] = "";
+                    MyNodeData newnode3 = new MyNodeData();
+                    newnode3.name = "OnFailure";
+                    newnode3.data = new Dictionary<string, string>();
+                    newnode3.data["Action"] = "";
+                    AddAbilityDataByObject(newnode2, newnodename);
+                    AddAbilityDataByObject(newnode3, newnodename);
+                }
+                else if (combbox.Text == "IsCasterAlive")
+                {
                     string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
                     MyNodeData newnode2 = new MyNodeData();
                     newnode2.name = "OnSuccess";
@@ -1739,11 +1916,11 @@ namespace D2AbilityCreator2
             if (level == 0)
             {
                 readytext = readytext + "\r\n" + otstup + "//Created by D2AbilityCreator 2.0";
-                if ((string)data[1] == "ability")
-                    readytext = readytext + "\r\n" + otstup + '"'+ "BaseClass" + '"'+ "\t\t" + '"' + "ability_datadriven" + '"';
-                else if ((string)data[1] == "item")
-                    readytext = readytext + "\r\n" + otstup + '"' + "BaseClass" + '"' + "\t\t" + '"' + "item_datadriven" + '"';
             }
+            if ((string)data[1] == "ability")
+                readytext = readytext + "\r\n" + otstup + '"'+ "BaseClass" + '"'+ "\t\t" + '"' + "ability_datadriven" + '"';
+            else if ((string)data[1] == "item")
+                readytext = readytext + "\r\n" + otstup + '"' + "BaseClass" + '"' + "\t\t" + '"' + "item_datadriven" + '"';
             for (int i = 2; data.Length > i; i++)
             {
                 if (data[i].GetType() == typeof(MyCheckbox))
@@ -1832,9 +2009,10 @@ namespace D2AbilityCreator2
         private void fileToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ClearPanels();
+            treeView1.SelectedNode = null;
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Open File";
-            fdlg.InitialDirectory = @"c:\";
+            //fdlg.InitialDirectory = @"c:\";
             fdlg.Filter = "Txt, lua files (*.txt;*.lua)|*.txt;*.lua";
             fdlg.FilterIndex = 1;
             fdlg.RestoreDirectory = true;
@@ -1847,6 +2025,7 @@ namespace D2AbilityCreator2
         private void fToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClearPanels();
+            treeView1.SelectedNode = null;
             using (var fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
@@ -1963,7 +2142,7 @@ namespace D2AbilityCreator2
                 selectednode = e.Node.Name;
                 object[] newdata = new object[0];
                 object[] menutag = new object[0] {};
-                if((string)data[1] == "ability" || (string)data[1] == "item")
+                if((string)data[1] == "ability" || (string)data[1] == "item" || (string)data[1] == "abilitydata")
                 {
                     ToolStripItem newitem2 = menuStrip2.Items.Add("Create");
                     newitem2.Alignment = ToolStripItemAlignment.Right;
@@ -1985,7 +2164,7 @@ namespace D2AbilityCreator2
                     {
                         MyCheckbox thisdata = (MyCheckbox)data[i];
                         CheckBox mycheck = new CheckBox();
-                        mycheck.Location = new Point(230, (30 * (i - 2)) + 6);
+                        mycheck.Location = new Point(250, (30 * (i - 2)) + 6);
                         mycheck.AutoSize = true;
                         mycheck.Checked = thisdata.check;
                         mycheck.Parent = splitContainer1.Panel2;
@@ -2013,7 +2192,7 @@ namespace D2AbilityCreator2
                         mynamelbl.Parent = splitContainer1.Panel2;
                         TextBox mytextbox = new TextBox();
                         mytextbox.Text = thisdata.str;
-                        mytextbox.Location = new Point(230, (30 * (i - 2)) + 3);
+                        mytextbox.Location = new Point(250, (30 * (i - 2)) + 3);
                         mytextbox.Size = new Size(400, 23);
                         mytextbox.Parent = splitContainer1.Panel2;
 
@@ -2030,7 +2209,7 @@ namespace D2AbilityCreator2
                         mynamelbl.Parent = splitContainer1.Panel2;
                         TextBox mytextbox = new TextBox();
                         mytextbox.Text = thisdata.str;
-                        mytextbox.Location = new Point(230, (30 * (i - 2)) + 3);
+                        mytextbox.Location = new Point(250, (30 * (i - 2)) + 3);
                         mytextbox.Size = new Size(400, 23);
                         mytextbox.Parent = splitContainer1.Panel2;
 
@@ -2047,7 +2226,7 @@ namespace D2AbilityCreator2
                         mynamelbl.Parent = splitContainer1.Panel2;
                         TextBox mytextbox = new TextBox();
                         mytextbox.Text = thisdata.str;
-                        mytextbox.Location = new Point(230, (30 * (i - 2)) + 3);
+                        mytextbox.Location = new Point(250, (30 * (i - 2)) + 3);
                         mytextbox.Size = new Size(400, 23);
                         mytextbox.Parent = splitContainer1.Panel2;
                         Button newbutton2 = new Button();
@@ -2077,7 +2256,7 @@ namespace D2AbilityCreator2
                         mynamelbl.Parent = splitContainer1.Panel2;
                         TextBox mytextbox = new TextBox();
                         mytextbox.Text = thisdata.str;
-                        mytextbox.Location = new Point(230, (30 * (i - 2)) + 3);
+                        mytextbox.Location = new Point(250, (30 * (i - 2)) + 3);
                         mytextbox.Size = new Size(400, 23);
                         mytextbox.Parent = splitContainer1.Panel2;
                         Button newbutton2 = new Button();
@@ -2129,7 +2308,7 @@ namespace D2AbilityCreator2
                         mynamelbl.Parent = splitContainer1.Panel2;
                         TextBox mytextbox = new TextBox();
                         mytextbox.Text = thisdata.str;
-                        mytextbox.Location = new Point(230, (30 * (i - 2)) + 3);
+                        mytextbox.Location = new Point(250, (30 * (i - 2)) + 3);
                         mytextbox.Size = new Size(400, 23);
                         mytextbox.Parent = splitContainer1.Panel2;
                         Button newbutton2 = new Button();
@@ -2238,7 +2417,7 @@ namespace D2AbilityCreator2
                         newbutton2.Location = new Point(980, (30 * (i - 2)) + 3);
                         newbutton2.Size = new Size(100, 23);
                         newbutton2.Text = "Select";
-                        newbutton2.Tag = new object[] { mytextbox, thisdata.selectlist2 };
+                        newbutton2.Tag = new object[] { mytextbox2, thisdata.selectlist2 };
                         newbutton2.Click += SelectModeOn;
                         newbutton2.Parent = splitContainer1.Panel2;
 
@@ -2391,44 +2570,53 @@ namespace D2AbilityCreator2
             }
         }
 
+        [Serializable()]
         public class MyAddItemRequirementsNode
         {
         }
 
+        [Serializable()]
         public class MyAddActionNode
         {
         }
 
+        [Serializable()]
         public class MyAddStatesOrPropertiesNode
         {
             public string name { get; set; }
         }
 
+        [Serializable()]
         public class MyAddAbilitySpecialNode
         {
         }
 
+        [Serializable()]
         public class MyAddNodes
         {
             public string[] items { get; set; }
         }
 
+        [Serializable()]
         public class MyAddCusttomNode
         {
         }
 
+        [Serializable()]
         public class MyCheckbox
         {
             public string name { get; set; }
             public bool check { get; set; }
         }
 
+        [Serializable()]
         public class MyString
         {
             public string name { get; set; }
             public string str { get; set; }
         }
 
+        [Serializable()]
         public class MyStringSelect
         {
             public string name { get; set; }
@@ -2436,6 +2624,7 @@ namespace D2AbilityCreator2
             public string[] selectlist { get; set; }
         }
 
+        [Serializable()]
         public class MyCheckboxString
         {
             public string name { get; set; }
@@ -2443,6 +2632,7 @@ namespace D2AbilityCreator2
             public string str { get; set; }
         }
 
+        [Serializable()]
         public class MyCheckboxStringString
         {
             public string name { get; set; }
@@ -2451,6 +2641,7 @@ namespace D2AbilityCreator2
             public string str2 { get; set; }
         }
 
+        [Serializable()]
         public class MyCheckboxStringSelect
         {
             public string name { get; set; }
@@ -2459,6 +2650,7 @@ namespace D2AbilityCreator2
             public string[] selectlist { get; set; }
         }
 
+        [Serializable()]
         public class MyCheckboxStringOpen
         {
             public string name { get; set; }
@@ -2466,6 +2658,7 @@ namespace D2AbilityCreator2
             public string str { get; set; }
         }
 
+        [Serializable()]
         public class MyCheckboxStringStringSelect
         {
             public string name { get; set; }
@@ -2475,6 +2668,7 @@ namespace D2AbilityCreator2
             public string[] selectlist { get; set; }
         }
 
+        [Serializable()]
         public class MyCheckboxStringSelectString
         {
             public string name { get; set; }
@@ -2484,6 +2678,7 @@ namespace D2AbilityCreator2
             public string[] selectlist { get; set; }
         }
 
+        [Serializable()]
         public class MyCheckboxStringSelectStringSelect
         {
             public string name { get; set; }
@@ -2497,19 +2692,20 @@ namespace D2AbilityCreator2
         private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClearPanels();
+            treeView1.SelectedNode = null;
             treeView1.CollapseAll();
         }
 
         private void expandAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClearPanels();
+            treeView1.SelectedNode = null;
             treeView1.ExpandAll();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Version: 2.0\r\nCreator: Niker323", "About");
-            treeView1.Size = new Size(200,400);
+            MessageBox.Show("Version: 2.0.5\r\nCreator: Niker323", "About");
         }
 
         private void donationAlertsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2520,6 +2716,62 @@ namespace D2AbilityCreator2
         private void patreonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.patreon.com/nikergames");
+        }
+
+        private void saveTreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearPanels();
+            treeView1.SelectedNode = null;
+            Stream myStream;
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "tree files (*.dact)|*.dact";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if ((myStream = saveFileDialog1.OpenFile()) != null)
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(myStream, treeView1.Nodes.Cast<TreeNode>().ToList());
+                    myStream.Close();
+                }
+            }
+
+            //using (var path_dialog = new FolderBrowserDialog())
+            //{
+            //    if (path_dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            //    {
+            //        using (var stream = new FileStream(path_dialog.SelectedPath, FileMode.Create))
+            //        {
+            //            BinaryFormatter bf = new BinaryFormatter();
+            //            bf.Serialize(stream, treeView1.Nodes.Cast<TreeNode>().ToList());
+            //        }
+            //    };
+            //}
+        }
+
+        private void loadTreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            treeView1.Nodes.Clear();
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "Open Tree";
+            //fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "Tree files (*.dact)|*.dact";
+            fdlg.FilterIndex = 1;
+            fdlg.RestoreDirectory = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+                using (var stream = new FileStream(fdlg.FileName, FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    object obj = bf.Deserialize(stream);
+
+                    TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
+                    treeView1.Nodes.AddRange(nodeList);
+                }
+            }
         }
     }
 }

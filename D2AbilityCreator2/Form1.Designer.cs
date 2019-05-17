@@ -36,16 +36,18 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.donationAlertsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.patreonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.donationAlertsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.patreonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.saveTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.SuspendLayout();
@@ -66,7 +68,7 @@
             this.treeView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.treeView1.Name = "treeView1";
             this.treeView1.RightToLeftLayout = true;
-            this.treeView1.Size = new System.Drawing.Size(252, 466);
+            this.treeView1.Size = new System.Drawing.Size(254, 466);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -79,7 +81,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1105, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1118, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -87,7 +89,9 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createToolStripMenuItem,
-            this.openToolStripMenuItem});
+            this.openToolStripMenuItem,
+            this.saveTreeToolStripMenuItem,
+            this.loadTreeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -95,7 +99,7 @@
             // createToolStripMenuItem
             // 
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createToolStripMenuItem.Text = "New";
             this.createToolStripMenuItem.Click += new System.EventHandler(this.createToolStripMenuItem_Click);
             // 
@@ -105,7 +109,7 @@
             this.fileToolStripMenuItem1,
             this.fToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // fileToolStripMenuItem1
@@ -121,6 +125,36 @@
             this.fToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.fToolStripMenuItem.Text = "Folder";
             this.fToolStripMenuItem.Click += new System.EventHandler(this.fToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // donateToolStripMenuItem
+            // 
+            this.donateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.donationAlertsToolStripMenuItem,
+            this.patreonToolStripMenuItem});
+            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.donateToolStripMenuItem.Text = "Donate";
+            // 
+            // donationAlertsToolStripMenuItem
+            // 
+            this.donationAlertsToolStripMenuItem.Name = "donationAlertsToolStripMenuItem";
+            this.donationAlertsToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.donationAlertsToolStripMenuItem.Text = "Donation Alerts";
+            this.donationAlertsToolStripMenuItem.Click += new System.EventHandler(this.donationAlertsToolStripMenuItem_Click);
+            // 
+            // patreonToolStripMenuItem
+            // 
+            this.patreonToolStripMenuItem.Name = "patreonToolStripMenuItem";
+            this.patreonToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.patreonToolStripMenuItem.Text = "Patreon";
+            this.patreonToolStripMenuItem.Click += new System.EventHandler(this.patreonToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -143,7 +177,7 @@
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.splitContainer1.Panel2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.splitContainer1.Size = new System.Drawing.Size(849, 466);
+            this.splitContainer1.Size = new System.Drawing.Size(860, 466);
             this.splitContainer1.SplitterDistance = 32;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -153,7 +187,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1105, 466);
+            this.panel1.Size = new System.Drawing.Size(1118, 466);
             this.panel1.TabIndex = 3;
             // 
             // menuStrip2
@@ -164,7 +198,7 @@
             this.expandAllToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 490);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(1105, 24);
+            this.menuStrip2.Size = new System.Drawing.Size(1118, 24);
             this.menuStrip2.TabIndex = 4;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -182,36 +216,6 @@
             this.expandAllToolStripMenuItem.Text = "ExpandAll";
             this.expandAllToolStripMenuItem.Click += new System.EventHandler(this.expandAllToolStripMenuItem_Click);
             // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // donateToolStripMenuItem
-            // 
-            this.donateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.donationAlertsToolStripMenuItem,
-            this.patreonToolStripMenuItem});
-            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
-            this.donateToolStripMenuItem.Text = "Donate";
-            // 
-            // donationAlertsToolStripMenuItem
-            // 
-            this.donationAlertsToolStripMenuItem.Name = "donationAlertsToolStripMenuItem";
-            this.donationAlertsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.donationAlertsToolStripMenuItem.Text = "Donation Alerts";
-            this.donationAlertsToolStripMenuItem.Click += new System.EventHandler(this.donationAlertsToolStripMenuItem_Click);
-            // 
-            // patreonToolStripMenuItem
-            // 
-            this.patreonToolStripMenuItem.Name = "patreonToolStripMenuItem";
-            this.patreonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.patreonToolStripMenuItem.Text = "Patreon";
-            this.patreonToolStripMenuItem.Click += new System.EventHandler(this.patreonToolStripMenuItem_Click);
-            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -225,15 +229,29 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(1105, 466);
-            this.splitContainer2.SplitterDistance = 252;
+            this.splitContainer2.Size = new System.Drawing.Size(1118, 466);
+            this.splitContainer2.SplitterDistance = 254;
             this.splitContainer2.TabIndex = 5;
+            // 
+            // saveTreeToolStripMenuItem
+            // 
+            this.saveTreeToolStripMenuItem.Name = "saveTreeToolStripMenuItem";
+            this.saveTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveTreeToolStripMenuItem.Text = "Save Tree";
+            this.saveTreeToolStripMenuItem.Click += new System.EventHandler(this.saveTreeToolStripMenuItem_Click);
+            // 
+            // loadTreeToolStripMenuItem
+            // 
+            this.loadTreeToolStripMenuItem.Name = "loadTreeToolStripMenuItem";
+            this.loadTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadTreeToolStripMenuItem.Text = "Load Tree";
+            this.loadTreeToolStripMenuItem.Click += new System.EventHandler(this.loadTreeToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1105, 514);
+            this.ClientSize = new System.Drawing.Size(1118, 514);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
@@ -279,6 +297,8 @@
         private System.Windows.Forms.ToolStripMenuItem donationAlertsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem patreonToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.ToolStripMenuItem saveTreeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadTreeToolStripMenuItem;
     }
 }
 
