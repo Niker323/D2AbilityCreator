@@ -658,6 +658,12 @@ namespace D2AbilityCreator2
             "DOTA_ITEM_DISASSEMBLE_ALWAYS",
             "DOTA_ITEM_DISASSEMBLE_NEVER"
         };
+        string[] Dispellable =
+        {
+            "DOTA_ToolTip_Dispellable_Yes_Strong",
+            "DOTA_ToolTip_Dispellable_Yes_Soft",
+            "DOTA_ToolTip_Dispellable_No"
+        };
 
         //[0] == name
         //[1] == type
@@ -1248,6 +1254,7 @@ namespace D2AbilityCreator2
                     new MyCheckboxStringSelect(){ name = "AbilityUnitTargetTeam", check = data.TryGetValue("AbilityUnitTargetTeam", out _), str = MyMiniF(data,"AbilityUnitTargetTeam") ?? "", selectlist = TeamsList },
                     new MyCheckboxStringSelect(){ name = "AbilityUnitDamageType", check = data.TryGetValue("AbilityUnitDamageType", out _), str = MyMiniF(data,"AbilityUnitDamageType") ?? "", selectlist = DamageTypeSelectedList },
                     new MyCheckboxStringSelect(){ name = "SpellImmunityType", check = data.TryGetValue("SpellImmunityType", out _), str = MyMiniF(data,"SpellImmunityType") ?? "", selectlist = SpellImmunityTypeList },
+                    new MyCheckboxStringSelect(){ name = "SpellDispellableType", check = data.TryGetValue("SpellDispellableType", out _), str = MyMiniF(data,"SpellDispellableType") ?? "", selectlist = Dispellable },
                     new MyCheckboxString(){ name = "CastFilterRejectCaster", check = data.TryGetValue("CastFilterRejectCaster", out _), str = MyMiniF(data,"CastFilterRejectCaster") ?? "1" },
                     new MyCheckboxString(){ name = "IsCastableWhileHidden", check = data.TryGetValue("IsCastableWhileHidden", out _), str = MyMiniF(data,"IsCastableWhileHidden") ?? "1" },
                     new MyCheckboxString(){ name = "IsOnCastBar", check = data.TryGetValue("IsOnCastBar", out _), str = MyMiniF(data,"IsOnCastBar") ?? "1" },
@@ -1285,6 +1292,7 @@ namespace D2AbilityCreator2
                 "AbilityUnitTargetTeam",
                 "AbilityUnitDamageType",
                 "SpellImmunityType",
+                "SpellDispellableType",
                 "CastFilterRejectCaster",
                 "IsCastableWhileHidden",
                 "IsOnCastBar",
@@ -1610,7 +1618,14 @@ namespace D2AbilityCreator2
                         }
                         else if (data.data.ElementAt(i).Key == "Type")
                         {
-                            tagdata[tagdata.Length - 1] = new MyCheckboxStringSelect() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value, selectlist = DamageTypeSelectedList };
+                            if (data.name == "Target")
+                            {
+                                tagdata[tagdata.Length - 1] = new MyCheckboxStringSelect() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value, selectlist = UnitTargetTypeSelectedList };
+                            }
+                            else
+                            {
+                                tagdata[tagdata.Length - 1] = new MyCheckboxStringSelect() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value, selectlist = DamageTypeSelectedList };
+                            }
                         }
                         else if (data.data.ElementAt(i).Key == "var_type")
                         {
@@ -1784,7 +1799,7 @@ namespace D2AbilityCreator2
                     newnode2.data["Teams"] = "";
                     newnode2.data["Flags"] = "";
                     newnode2.data["ExcludeFlags"] = "";
-                    newnode2.data["Types"] = "";
+                    newnode2.data["Type"] = "";
                     newnode2.data["ExcludeTypes"] = "";
                     newnode2.data["MaxTargets"] = "";
                     newnode2.data["Random"] = "";
@@ -2705,7 +2720,7 @@ namespace D2AbilityCreator2
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Version: 2.0.5\r\nCreator: Niker323", "About");
+            MessageBox.Show("Version: 2.0.6\r\nCreator: Niker323", "About");
         }
 
         private void donationAlertsToolStripMenuItem_Click(object sender, EventArgs e)
