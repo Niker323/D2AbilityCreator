@@ -542,7 +542,7 @@ namespace D2AbilityCreator2
             "ATTACKER",
             "UNIT"
         };
-        string[] EventList = new string[] { "OnSpellStart", "OnChannelFinish", "OnChannelInterrupted", "OnChannelSucceeded", "OnOwnerDied", "OnOwnerSpawned", "OnProjectileFinish", "OnProjectileHitUnit", "OnToggleOff", "OnToggleOn", "OnUpgrade", "OnAbilityEndChannel", "OnAbilityStart", "OnAttack", "OnAttackAllied", "OnAttackFailed", "OnCreated", "OnEquip", "OnHealReceived", "OnHealthGained", "OnHeroKilled", "OnManaGained", "OnOrder", "OnProjectileDodge", "OnRespawn", "OnSpentMana", "OnStateChanged", "OnTeleported", "OnTeleporting", "OnUnitMoved" };
+        string[] EventList = new string[] { "OnSpellStart", "OnChannelFinish", "OnChannelInterrupted", "OnChannelSucceeded", "OnOwnerSpawned", "OnProjectileFinish", "OnProjectileHitUnit", "OnToggleOff", "OnToggleOn", "OnUpgrade", "OnAbilityEndChannel", "OnAbilityStart", "OnAttack", "OnAttackAllied", "OnAttackFailed", "OnCreated", "OnEquip", "OnHealReceived", "OnHealthGained", "OnHeroKilled", "OnManaGained", "OnOrder", "OnProjectileDodge", "OnRespawn", "OnSpentMana", "OnStateChanged", "OnTeleported", "OnTeleporting", "OnUnitMoved" };
         string[] ActionList = new string[] {
             "AddAbility",
             "ActOnTargets",
@@ -626,6 +626,7 @@ namespace D2AbilityCreator2
             "OnDestroy",
             "OnKill",
             "OnHeroKilled",
+            "OnOwnerDied",
             "OnOrbFire",
             "OnOrbImpact",
             "OnTakeDamage",
