@@ -1,0 +1,8 @@
+"RunScript"
+{
+	"ScriptFile"	"hero_creater.lua"
+	"Function"		"SpawnUnit"
+	"unit_name"     "npc_dota_elves_hero_mage"
+	"barrack_level" "2"
+	"ancient_level" "2"
+}

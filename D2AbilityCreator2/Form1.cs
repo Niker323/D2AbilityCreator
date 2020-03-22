@@ -673,10 +673,36 @@ namespace D2AbilityCreator2
 
         int nodenum = 0;
         string selectednode = null;
+        string blankspath = @"blanks";
 
         public Form1()
         {
             InitializeComponent();
+
+            if (!string.IsNullOrWhiteSpace(blankspath))
+            {
+
+                //Debug.WriteLine(fbd.SelectedPath);
+                string[] files;
+                try
+                {
+                    files = Directory.GetFiles(blankspath);
+                }
+                catch (Exception error)
+                {
+                    Debug.WriteLine(error);
+                    return;
+                }
+                listBox1.Items.Clear();
+                for (int i = 0; files.Length > i; i++)
+                {
+                    if (files[i].Substring(files[i].Length - 4) == ".txt")
+                    {
+                        string filename = RemovePath(files[i]);
+                        listBox1.Items.Add(filename.Substring(0, filename.Length - 4));
+                    }
+                }
+            }
         }
 
         public string RemovePath(string str)
@@ -903,8 +929,8 @@ namespace D2AbilityCreator2
             }
             else
             {
-                    Array.Resize(ref nodes, nodes.Length + 1);
-                    nodes[level + 1] = AddAbilityDataByObject(nowselected, nodes[level]);
+                Array.Resize(ref nodes, nodes.Length + 1);
+                nodes[level + 1] = AddAbilityDataByObject(nowselected, nodes[level]);
             }
             for (int i = 0; nowselected.childs.Count > i; i++)
             {
@@ -1487,18 +1513,29 @@ namespace D2AbilityCreator2
 
         public string AddAbilityDataByObject(MyNodeData data, string nodename)
         {
-            TreeNode[] neednode = treeView1.Nodes.Find(nodename, true);
-            TreeNode newnode = neednode[0].Nodes.Add(data.name);
-            object[] nodetag = (object[])neednode[0].Tag;
+            TreeNode newnode = new TreeNode();
+            object[] nodetag = null;
+            if (nodename != null)
+            {
+                TreeNode[] neednode = treeView1.Nodes.Find(nodename, true);
+                newnode = neednode[0].Nodes.Add(data.name);
+                nodetag = (object[])neednode[0].Tag;
+                if (!neednode[0].IsExpanded)
+                    neednode[0].Toggle();
+            }
+            else
+            {
+                newnode = treeView1.Nodes.Add(data.name);
+            }
+            //TreeNode[] neednode = treeView1.Nodes.Find(nodename, true);
+            //TreeNode newnode = neednode[0].Nodes.Add(data.name);
             newnode.Name = "node" + nodenum;
             object[] tagdata = new object[] {
                 data.name,
                 "abilitydata"
             };
             nodenum++;
-            if (!neednode[0].IsExpanded)
-                neednode[0].Toggle();
-            if ((string)nodetag[0] == "Modifiers")
+            if (nodetag != null && nodetag[0] != null && (string)nodetag[0] == "Modifiers")
             {
                 string[] ThisEventList = new string[2 + ModifierEventList.Length];
                 new string[] { "Properties", "States" }.CopyTo(ThisEventList, 0);
@@ -1749,13 +1786,13 @@ namespace D2AbilityCreator2
             Array.Resize(ref nodetag, nodetag.Length + 1);
             nodetag[nodetag.Length - 1] = nodetag[nodetag.Length - 2];
             string col = "";
-            if (nodetag.Length - 2 < 10)
+            if (nodetag.Length - 3 < 10)
             {
-                col = "0" + (nodetag.Length - 2);
+                col = "0" + (nodetag.Length - 3);
             }
             else
             {
-                col = (nodetag.Length - 2).ToString();
+                col = (nodetag.Length - 3).ToString();
             }
             nodetag[nodetag.Length - 2] = new MyCheckboxStringString() { check = false, name = "", str1 = col, str2 = "" };
             selnode.Tag = nodetag;
@@ -2078,7 +2115,7 @@ namespace D2AbilityCreator2
             //ListBox newlistbox = new ListBox();
             Label namelbl = new Label();
             namelbl.Text = "Ability/Item name:";
-            namelbl.Location = new Point(10, 7);
+            namelbl.Location = new Point(10, 6);
             namelbl.AutoSize = true;
             namelbl.Parent = splitContainer1.Panel1;
             TextBox newtextbox = new TextBox();
@@ -2110,19 +2147,24 @@ namespace D2AbilityCreator2
             //Debug.WriteLine(sender);
             //Debug.WriteLine(e.Node.Tag);
             object[] data = (object[])e.Node.Tag;
-            Label namelbl = new Label();
+            TextBox namelbl = new TextBox();
+            namelbl.ReadOnly = true;
+            namelbl.Dock = DockStyle.Fill;
+            namelbl.BorderStyle = BorderStyle.None;
             namelbl.Text = (string)data[0];
-            namelbl.Location = new Point(10, 7);
-            namelbl.AutoSize = true;
+            namelbl.Location = new Point(10, 3);
+            namelbl.Font = new Font(namelbl.Font.FontFamily, 15);
+            //namelbl.AutoSize = true;
             namelbl.Parent = splitContainer1.Panel1;
             Button newbutton = new Button();
             newbutton.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
-            newbutton.Location = new Point(splitContainer1.Size.Width - 110, 3);
+            newbutton.Location = new Point(splitContainer1.Size.Width - 110, 2);
             newbutton.Size = new Size(80, 23);
             newbutton.Text = "Delete";
             newbutton.Tag = e.Node;
             newbutton.Click += DeleteNode;
             newbutton.Parent = splitContainer1.Panel1;
+            newbutton.BringToFront();
             if ((string)data[1] == "file.lua")
             {
                 Button newbutton2 = new Button();
@@ -2158,15 +2200,16 @@ namespace D2AbilityCreator2
                 selectednode = e.Node.Name;
                 object[] newdata = new object[0];
                 object[] menutag = new object[0] {};
-                if((string)data[1] == "ability" || (string)data[1] == "item" || (string)data[1] == "abilitydata")
-                {
+                //if((string)data[1] == "ability" || (string)data[1] == "item" || (string)data[1] == "abilitydata")
+                //{
                     ToolStripItem newitem2 = menuStrip2.Items.Add("Create");
+                    newitem2.Margin = new Padding(0,0,splitContainer3.Panel2.Size.Width,0);
                     newitem2.Alignment = ToolStripItemAlignment.Right;
                     newitem2.Tag = e.Node;
                     newitem2.Click += CreateText;
                     Array.Resize(ref menutag, menutag.Length + 1);
                     menutag[menutag.Length - 1] = newitem2;
-                }
+                //}
                 ToolStripItem newitem = menuStrip2.Items.Add("Add Line");
                 newitem.Alignment = ToolStripItemAlignment.Right;
                 newitem.Click += AddLine;
@@ -2721,17 +2764,7 @@ namespace D2AbilityCreator2
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Version: 2.0.6\r\nCreator: Niker323", "About");
-        }
-
-        private void donationAlertsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://www.donationalerts.com/r/niker323");
-        }
-
-        private void patreonToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://www.patreon.com/nikergames");
+            MessageBox.Show("Version: 2.1.0\r\nCreator: Niker323", "About");
         }
 
         private void saveTreeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2786,6 +2819,134 @@ namespace D2AbilityCreator2
 
                     TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
                     treeView1.Nodes.AddRange(nodeList);
+                }
+            }
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void splitContainer3_Panel2_SizeChanged(object sender, EventArgs e)
+        {
+            ClearPanels();
+            TreeNode selnode = treeView1.SelectedNode;
+            treeView1.SelectedNode = null;
+            treeView1.SelectedNode = selnode;
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            //if (treeView1.SelectedNode == null) return;
+            string line = "";
+            string filetext = "";
+            StreamReader file;
+            try
+            {
+                file = new StreamReader(blankspath + @"\" + listBox1.SelectedItem + ".txt");
+            }
+            catch (Exception error)
+            {
+                //Debug.WriteLine(error);
+                return;
+            }
+            while ((line = file.ReadLine()) != null)
+            {
+                if (line.IndexOf(@"//") != -1)
+                {
+                    filetext = filetext + line.Substring(0, line.IndexOf(@"//"));
+                }
+                else
+                {
+                    filetext = filetext + line;
+                }
+            }
+            file.Close();
+            //Debug.WriteLine(filetext);
+            MyNodeData alldata = new MyNodeData();
+            alldata.childs = new List<MyNodeData>();
+            int level = 0;
+            string locstr = "";
+            bool writemode = false;
+            string locstr2 = "";
+            bool writed = false;
+            for (int i = 0; filetext.Length > i; i++)
+            {
+                if (writemode == true)
+                {
+                    if (filetext[i] == '"')
+                    {
+                        writemode = false;
+                        if (writed == false)
+                        {
+                            locstr2 = locstr;
+                            writed = true;
+                            locstr = "";
+                        }
+                        else
+                        {
+                            alldata.AddStringStringData(locstr2, locstr, level);
+                            locstr2 = "";
+                            locstr = "";
+                            writed = false;
+                        }
+                    }
+                    else
+                    {
+                        locstr = locstr + filetext[i];
+                    }
+                }
+                else
+                {
+                    if (filetext[i] == '"')
+                    {
+                        if (writemode == false)
+                        {
+                            writemode = true;
+                        }
+                    }
+                    else if (filetext[i] == '{')
+                    {
+                        alldata.CreateChield(locstr2, level);
+                        writed = false;
+                        level++;
+                        locstr = "";
+                        locstr2 = "";
+                    }
+                    else if (filetext[i] == '}')
+                    {
+                        level--;
+                    }
+                }
+            }
+            string[] nodes = new string[1];
+            if (treeView1.SelectedNode != null) nodes[0] = treeView1.SelectedNode.Name;
+            else nodes[0] = null;
+            CreateNodes(alldata.childs[0], nodes, 0);
+        }
+
+        private void selectPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    blankspath = fbd.SelectedPath;
+
+                    //Debug.WriteLine(fbd.SelectedPath);
+                    string[] files = Directory.GetFiles(fbd.SelectedPath);
+                    listBox1.Items.Clear();
+                    for (int i = 0; files.Length > i; i++)
+                    {
+                        if (files[i].Substring(files[i].Length - 4) == ".txt")
+                        {
+                            string filename = RemovePath(files[i]);
+                            listBox1.Items.Add(filename.Substring(0, filename.Length - 4));
+                        }
+                    }
                 }
             }
         }
