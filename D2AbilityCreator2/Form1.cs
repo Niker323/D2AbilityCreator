@@ -679,6 +679,11 @@ namespace D2AbilityCreator2
         {
             InitializeComponent();
 
+            UpdateBlankList();
+        }
+
+        public void UpdateBlankList()
+        {
             if (!string.IsNullOrWhiteSpace(blankspath))
             {
 
@@ -995,6 +1000,7 @@ namespace D2AbilityCreator2
 
         public void DeleteNode(object sender, EventArgs e)
         {
+            Debug.WriteLine("DeleteNode");
             ClearPanels();
             Button thisb = (Button)sender;
             treeView1.Nodes.Remove((TreeNode)thisb.Tag);
@@ -1088,6 +1094,8 @@ namespace D2AbilityCreator2
                 ToolStripItem item = (ToolStripItem)menutag[i];
                 item.Dispose();
             }
+            menuStrip2.Tag = null;
+            button1.Enabled = false;
         }
 
         public void AddString(object sender, EventArgs e)
@@ -1626,7 +1634,7 @@ namespace D2AbilityCreator2
                         {
                             tagdata[tagdata.Length - 1] = new MyAddActionNode();
                         }
-                        else if (data.data.ElementAt(i).Key == "AbilityName" || data.data.ElementAt(i).Key == "ModifierName" || data.data.ElementAt(i).Key == "EffectName" || data.data.ElementAt(i).Key == "ControlPoints" || data.data.ElementAt(i).Key == "TargetPoint" || data.data.ElementAt(i).Key == "EffectRadius" || data.data.ElementAt(i).Key == "EffectDurationScale" || data.data.ElementAt(i).Key == "EffectLifeDurationScale" || data.data.ElementAt(i).Key == "EffectColorA" || data.data.ElementAt(i).Key == "EffectColorB" || data.data.ElementAt(i).Key == "EffectAlphaScale" || data.data.ElementAt(i).Key == "CleavePercent" || data.data.ElementAt(i).Key == "CleaveRadius" || data.data.ElementAt(i).Key == "ModifierName" || data.data.ElementAt(i).Key == "MinDamage" || data.data.ElementAt(i).Key == "MaxDamage" || data.data.ElementAt(i).Key == "Damage" || data.data.ElementAt(i).Key == "CurrentHealthPercentBasedDamage" || data.data.ElementAt(i).Key == "MaxHealthPercentBasedDamage" || data.data.ElementAt(i).Key == "HealAmount" || data.data.ElementAt(i).Key == "Duration" || data.data.ElementAt(i).Key == "Distance" || data.data.ElementAt(i).Key == "Height" || data.data.ElementAt(i).Key == "IsFixedDistance" || data.data.ElementAt(i).Key == "ShouldStun" || data.data.ElementAt(i).Key == "LifestealPercent" || data.data.ElementAt(i).Key == "MoveSpeed" || data.data.ElementAt(i).Key == "StartRadius" || data.data.ElementAt(i).Key == "EndRadius" || data.data.ElementAt(i).Key == "FixedDistance" || data.data.ElementAt(i).Key == "StartPosition" || data.data.ElementAt(i).Key == "HasFrontalCone" || data.data.ElementAt(i).Key == "ProvidesVision" || data.data.ElementAt(i).Key == "VisionRadius" || data.data.ElementAt(i).Key == "Chance" || data.data.ElementAt(i).Key == "PseudoRandom" || data.data.ElementAt(i).Key == "Function" || data.data.ElementAt(i).Key == "UnitName" || data.data.ElementAt(i).Key == "UnitCount" || data.data.ElementAt(i).Key == "UnitLimit" || data.data.ElementAt(i).Key == "SpawnRadius" || data.data.ElementAt(i).Key == "GrantsGold" || data.data.ElementAt(i).Key == "GrantsXP" || data.data.ElementAt(i).Key == "Dodgeable" || data.data.ElementAt(i).Key == "SourceAttachment")
+                        else if (data.data.ElementAt(i).Key == "AbilityName" || data.data.ElementAt(i).Key == "ModifierName" || data.data.ElementAt(i).Key == "EffectName" || data.data.ElementAt(i).Key == "ControlPoints" || data.data.ElementAt(i).Key == "TargetPoint" || data.data.ElementAt(i).Key == "EffectRadius" || data.data.ElementAt(i).Key == "EffectDurationScale" || data.data.ElementAt(i).Key == "EffectLifeDurationScale" || data.data.ElementAt(i).Key == "EffectColorA" || data.data.ElementAt(i).Key == "EffectColorB" || data.data.ElementAt(i).Key == "EffectAlphaScale" || data.data.ElementAt(i).Key == "CleavePercent" || data.data.ElementAt(i).Key == "CleaveRadius" || data.data.ElementAt(i).Key == "ModifierName" || data.data.ElementAt(i).Key == "MinDamage" || data.data.ElementAt(i).Key == "MaxDamage" || data.data.ElementAt(i).Key == "Damage" || data.data.ElementAt(i).Key == "CurrentHealthPercentBasedDamage" || data.data.ElementAt(i).Key == "MaxHealthPercentBasedDamage" || data.data.ElementAt(i).Key == "HealAmount" || data.data.ElementAt(i).Key == "Duration" || data.data.ElementAt(i).Key == "Distance" || data.data.ElementAt(i).Key == "Height" || data.data.ElementAt(i).Key == "IsFixedDistance" || data.data.ElementAt(i).Key == "ShouldStun" || data.data.ElementAt(i).Key == "LifestealPercent" || data.data.ElementAt(i).Key == "MoveSpeed" || data.data.ElementAt(i).Key == "StartRadius" || data.data.ElementAt(i).Key == "EndRadius" || data.data.ElementAt(i).Key == "FixedDistance" || data.data.ElementAt(i).Key == "StartPosition" || data.data.ElementAt(i).Key == "HasFrontalCone" || data.data.ElementAt(i).Key == "ProvidesVision" || data.data.ElementAt(i).Key == "VisionRadius" || data.data.ElementAt(i).Key == "Chance" || data.data.ElementAt(i).Key == "PseudoRandom" || data.data.ElementAt(i).Key == "Function" || data.data.ElementAt(i).Key == "UnitName" || data.data.ElementAt(i).Key == "UnitCount" || data.data.ElementAt(i).Key == "UnitLimit" || data.data.ElementAt(i).Key == "SpawnRadius" || data.data.ElementAt(i).Key == "GrantsGold" || data.data.ElementAt(i).Key == "GrantsXP" || data.data.ElementAt(i).Key == "Dodgeable" || data.data.ElementAt(i).Key == "SourceAttachment" || data.data.ElementAt(i).Key == "Radius")
                         {
                             tagdata[tagdata.Length - 1] = new MyCheckboxString() { check = true, name = data.data.ElementAt(i).Key, str = data.data.ElementAt(i).Value };
                         }
@@ -1732,6 +1740,7 @@ namespace D2AbilityCreator2
 
         public void AddLine(object sender, EventArgs e)
         {
+            Debug.WriteLine("AddLine");
             ClearPanels();
             TreeNode selnode = treeView1.SelectedNode;
             object[] nodetag = (object[])selnode.Tag;
@@ -1780,6 +1789,7 @@ namespace D2AbilityCreator2
 
         public void AddItemRequirements(object sender, EventArgs e)
         {
+            Debug.WriteLine("AddItemRequirements");
             ClearPanels();
             TreeNode selnode = treeView1.SelectedNode;
             object[] nodetag = (object[])selnode.Tag;
@@ -1802,6 +1812,7 @@ namespace D2AbilityCreator2
 
         public void AddStateOrPropertie(object sender, EventArgs e)
         {
+            Debug.WriteLine("AddStateOrPropertie");
             Button thisb = (Button)sender;
             string sorp = (string)thisb.Tag;
             ClearPanels();
@@ -1816,88 +1827,19 @@ namespace D2AbilityCreator2
             treeView1.SelectedNode = selnode;
         }
 
-        public void AddMyActionNode(object sender, EventArgs e)
+        public void OnAddActionDoubleClick(object sender, EventArgs e)
         {
-            Button thisb = (Button)sender;
-            ComboBox combbox = (ComboBox)thisb.Tag;
-            if (combbox.Text != "")
+            ListBox thislist = (ListBox)sender;
+            //Debug.WriteLine(thislist.SelectedItem.ToString());
+            //ToolStripMenuItem thisb = (ToolStripMenuItem)sender;
+            // ToolStripComboBox combbox = (ToolStripComboBox)thisb.Tag;
+            if (thislist.SelectedItem.ToString() != "")
             {
-                int num = Array.IndexOf(ActionList, combbox.Text);
-                MyNodeData newnode = new MyNodeData();
-                newnode.name = combbox.Text;
-                newnode.data = new Dictionary<string, string>();
-                if (combbox.Text == "ActOnTargets")
-                {
-                    string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
-                    MyNodeData newnode2 = new MyNodeData();
-                    newnode2.name = "Target";
-                    newnode2.data = new Dictionary<string, string>();
-                    newnode2.data["Center"] = "";
-                    newnode2.data["Radius"] = "";
-                    newnode2.data["Teams"] = "";
-                    newnode2.data["Flags"] = "";
-                    newnode2.data["ExcludeFlags"] = "";
-                    newnode2.data["Type"] = "";
-                    newnode2.data["ExcludeTypes"] = "";
-                    newnode2.data["MaxTargets"] = "";
-                    newnode2.data["Random"] = "";
-                    MyNodeData newnode3 = new MyNodeData();
-                    newnode3.name = "Action";
-                    newnode3.data = new Dictionary<string, string>();
-                    AddAbilityDataByObject(newnode2, newnodename);
-                    AddAbilityDataByObject(newnode3, newnodename);
-                }
-                else if (combbox.Text == "DelayedAction")
-                {
-                    newnode.data["Delay"] = "";
-                    MyNodeData newnode2 = new MyNodeData();
-                    newnode2.name = "Action";
-                    newnode2.data = new Dictionary<string, string>();
-                    AddAbilityDataByObject(newnode2,AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name));
-                }
-                else if(combbox.Text == "Random")
-                {
-                    newnode.data["Chance"] = "";
-                    newnode.data["PseudoRandom"] = "";
-                    string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
-                    MyNodeData newnode2 = new MyNodeData();
-                    newnode2.name = "OnSuccess";
-                    newnode2.data = new Dictionary<string, string>();
-                    newnode2.data["Action"] = "";
-                    MyNodeData newnode3 = new MyNodeData();
-                    newnode3.name = "OnFailure";
-                    newnode3.data = new Dictionary<string, string>();
-                    newnode3.data["Action"] = "";
-                    AddAbilityDataByObject(newnode2, newnodename);
-                    AddAbilityDataByObject(newnode3, newnodename);
-                }
-                else if (combbox.Text == "IsCasterAlive")
-                {
-                    string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
-                    MyNodeData newnode2 = new MyNodeData();
-                    newnode2.name = "OnSuccess";
-                    newnode2.data = new Dictionary<string, string>();
-                    newnode2.data["Action"] = "";
-                    MyNodeData newnode3 = new MyNodeData();
-                    newnode3.name = "OnFailure";
-                    newnode3.data = new Dictionary<string, string>();
-                    newnode3.data["Action"] = "";
-                    AddAbilityDataByObject(newnode2, newnodename);
-                    AddAbilityDataByObject(newnode3, newnodename);
-                }
-                else
-                {
-                    string[] actprop = (string[])ActionPropertiesList[num];
-                    for (int i = 0; actprop.Length > i;i++)
-                    {
-                        newnode.data[actprop[i]] = "";
-                    }
-                    AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
-                }
+                AddMyActionNode(thislist.SelectedItem.ToString());
             }
         }
 
-        public void AddMyNode(object sender, EventArgs e)
+        public void OnAddActionClick(object sender, EventArgs e)
         {
             Button thisb = (Button)sender;
             ComboBox combbox = (ComboBox)thisb.Tag;
@@ -1905,13 +1847,118 @@ namespace D2AbilityCreator2
             // ToolStripComboBox combbox = (ToolStripComboBox)thisb.Tag;
             if (combbox.Text != "")
             {
-                MyNodeData newnode = new MyNodeData();
-                newnode.name = combbox.Text;
-                newnode.data = new Dictionary<string, string>();
-                AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
-                //TreeNode[] neednode = treeView1.Nodes.Find(AddAbilityDataByObject(newnode,treeView1.SelectedNode.Name), true);
-                //treeView1.SelectedNode = neednode[0];
+                AddMyActionNode(combbox.Text);
             }
+        }
+
+        public void AddMyActionNode(string text)
+        {
+            int num = Array.IndexOf(ActionList, text);
+            MyNodeData newnode = new MyNodeData();
+            newnode.name = text;
+            newnode.data = new Dictionary<string, string>();
+            if (text == "ActOnTargets")
+            {
+                string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+                MyNodeData newnode2 = new MyNodeData();
+                newnode2.name = "Target";
+                newnode2.data = new Dictionary<string, string>();
+                newnode2.data["Center"] = "";
+                newnode2.data["Radius"] = "";
+                newnode2.data["Teams"] = "";
+                newnode2.data["Flags"] = "";
+                newnode2.data["ExcludeFlags"] = "";
+                newnode2.data["Type"] = "";
+                newnode2.data["ExcludeTypes"] = "";
+                newnode2.data["MaxTargets"] = "";
+                newnode2.data["Random"] = "";
+                MyNodeData newnode3 = new MyNodeData();
+                newnode3.name = "Action";
+                newnode3.data = new Dictionary<string, string>();
+                AddAbilityDataByObject(newnode2, newnodename);
+                AddAbilityDataByObject(newnode3, newnodename);
+            }
+            else if (text == "DelayedAction")
+            {
+                newnode.data["Delay"] = "";
+                MyNodeData newnode2 = new MyNodeData();
+                newnode2.name = "Action";
+                newnode2.data = new Dictionary<string, string>();
+                AddAbilityDataByObject(newnode2,AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name));
+            }
+            else if(text == "Random")
+            {
+                newnode.data["Chance"] = "";
+                newnode.data["PseudoRandom"] = "";
+                string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+                MyNodeData newnode2 = new MyNodeData();
+                newnode2.name = "OnSuccess";
+                newnode2.data = new Dictionary<string, string>();
+                newnode2.data["Action"] = "";
+                MyNodeData newnode3 = new MyNodeData();
+                newnode3.name = "OnFailure";
+                newnode3.data = new Dictionary<string, string>();
+                newnode3.data["Action"] = "";
+                AddAbilityDataByObject(newnode2, newnodename);
+                AddAbilityDataByObject(newnode3, newnodename);
+            }
+            else if (text == "IsCasterAlive")
+            {
+                string newnodename = AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+                MyNodeData newnode2 = new MyNodeData();
+                newnode2.name = "OnSuccess";
+                newnode2.data = new Dictionary<string, string>();
+                newnode2.data["Action"] = "";
+                MyNodeData newnode3 = new MyNodeData();
+                newnode3.name = "OnFailure";
+                newnode3.data = new Dictionary<string, string>();
+                newnode3.data["Action"] = "";
+                AddAbilityDataByObject(newnode2, newnodename);
+                AddAbilityDataByObject(newnode3, newnodename);
+            }
+            else
+            {
+                string[] actprop = (string[])ActionPropertiesList[num];
+                for (int i = 0; actprop.Length > i;i++)
+                {
+                    newnode.data[actprop[i]] = "";
+                }
+                AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+            }
+        }
+
+        public void OnAddDoubleClick(object sender, EventArgs e)
+        {
+            ListBox thislist = (ListBox)sender;
+            //Debug.WriteLine(thislist.SelectedItem.ToString());
+            //ToolStripMenuItem thisb = (ToolStripMenuItem)sender;
+            // ToolStripComboBox combbox = (ToolStripComboBox)thisb.Tag;
+            if (thislist.SelectedItem.ToString() != "")
+            {
+                AddMyNode(thislist.SelectedItem.ToString());
+            }
+        }
+
+        public void OnAddClick(object sender, EventArgs e)
+        {
+            Button thisb = (Button)sender;
+            ComboBox combbox = (ComboBox)thisb.Tag;
+            //ToolStripMenuItem thisb = (ToolStripMenuItem)sender;
+            // ToolStripComboBox combbox = (ToolStripComboBox)thisb.Tag;
+            if (combbox.Text != "")
+            {
+                AddMyNode(combbox.Text);
+            }
+        }
+
+        public void AddMyNode(string text)
+        {
+            MyNodeData newnode = new MyNodeData();
+            newnode.name = text;
+            newnode.data = new Dictionary<string, string>();
+            AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+            //TreeNode[] neednode = treeView1.Nodes.Find(AddAbilityDataByObject(newnode,treeView1.SelectedNode.Name), true);
+            //treeView1.SelectedNode = neednode[0];
         }
 
         public void CreateItemButtonClick(object sender, EventArgs e)
@@ -1943,6 +1990,7 @@ namespace D2AbilityCreator2
 
         public void CreateText(object sender, EventArgs e)
         {
+            Debug.WriteLine("CreateText");
             ClearPanels();
             treeView1.SelectedNode = null;
             ToolStripMenuItem thisb = (ToolStripMenuItem)sender;
@@ -1953,6 +2001,49 @@ namespace D2AbilityCreator2
             newrtb.Parent = splitContainer1.Panel2;
             newrtb.Dock = DockStyle.Fill;
             newrtb.Text = text;
+
+            button1.Tag = newrtb;
+            button1.Enabled = true;
+
+            //object[] menutag = new object[0] { };
+
+            //ToolStripItem newitem = menuStrip2.Items.Add("Add To Blanks");
+            //newitem.Margin = new Padding(0, 0, splitContainer3.Panel2.Size.Width, 0);
+            //newitem.Alignment = ToolStripItemAlignment.Right;
+            //newitem.Click += AddToBlanks;
+            ////Array.Resize(ref menutag, menutag.Length + 1);
+            ////menutag[menutag.Length - 1] = newitem;
+
+            //ToolStripItem newitem2 = new ToolStripTextBox();
+            //newitem2.Name = "toolStripTextBox1";
+            ////ToolStripItem newitem2 = menuStrip2.Items.Add("New Blank Name");
+            ////newitem2.Margin = new Padding(0, 0, splitContainer3.Panel2.Size.Width, 0);
+            //newitem2.Alignment = ToolStripItemAlignment.Right;
+            //int id = menuStrip2.Items.Add(newitem2);
+            ////Array.Resize(ref menutag, menutag.Length + 1);
+            ////menutag[menutag.Length - 1] = newitem2;
+            ////newitem2.Dispose();
+            //newitem.Tag = new object[2] { newitem2, text };
+            //menuStrip2.Tag = new object[2] { newitem, newitem2 };
+        }
+
+        public void AddToBlanks(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            RichTextBox textBox = (RichTextBox)button.Tag;
+            if (textBox1.Text == "")
+            {
+                MessageBox.Show("Invalid name!", "Error");
+            }
+            else
+            {
+                using (StreamWriter sw = new StreamWriter(blankspath + @"/" + textBox1.Text + ".txt", false))
+                {
+                    string text = textBox.Text;
+                    sw.WriteLine(text);
+                }
+                UpdateBlankList();
+            }
         }
 
         public string GetTextByNode(TreeNode node,int level)
@@ -2061,6 +2152,7 @@ namespace D2AbilityCreator2
 
         private void fileToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine("fileToolStripMenuItem1_Click");
             ClearPanels();
             treeView1.SelectedNode = null;
             OpenFileDialog fdlg = new OpenFileDialog();
@@ -2077,6 +2169,7 @@ namespace D2AbilityCreator2
 
         private void fToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine("fToolStripMenuItem_Click");
             ClearPanels();
             treeView1.SelectedNode = null;
             using (var fbd = new FolderBrowserDialog())
@@ -2108,6 +2201,7 @@ namespace D2AbilityCreator2
 
         private void createToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine("createToolStripMenuItem_Click");
             ClearPanels();
             treeView1.SelectedNode = null;
             //treeView1.Visible = false;
@@ -2142,8 +2236,12 @@ namespace D2AbilityCreator2
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            Debug.WriteLine("treeView1_AfterSelect");
             ClearPanels();
             selectednode = null;
+            listBox2.Items.Clear();
+            listBox2.DoubleClick -= OnAddDoubleClick;
+            listBox2.DoubleClick -= OnAddActionDoubleClick;
             //Debug.WriteLine(sender);
             //Debug.WriteLine(e.Node.Tag);
             object[] data = (object[])e.Node.Tag;
@@ -2203,7 +2301,7 @@ namespace D2AbilityCreator2
                 //if((string)data[1] == "ability" || (string)data[1] == "item" || (string)data[1] == "abilitydata")
                 //{
                     ToolStripItem newitem2 = menuStrip2.Items.Add("Create");
-                    newitem2.Margin = new Padding(0,0,splitContainer3.Panel2.Size.Width,0);
+                    newitem2.Margin = new Padding(0,0,splitContainer3.Panel2.Size.Width-94,0);
                     newitem2.Alignment = ToolStripItemAlignment.Right;
                     newitem2.Tag = e.Node;
                     newitem2.Click += CreateText;
@@ -2498,7 +2596,7 @@ namespace D2AbilityCreator2
                         newbutton1.Size = new Size(100, 23);
                         newbutton1.Text = "Add";
                         newbutton1.Tag = newcombbox;
-                        newbutton1.Click += AddMyNode;
+                        newbutton1.Click += OnAddClick;
                         newbutton1.Parent = splitContainer1.Panel2;
                         //ToolStripItem newitem2 = menuStrip2.Items.Add("Add");
                         //newitem2.Alignment = ToolStripItemAlignment.Right;
@@ -2513,6 +2611,9 @@ namespace D2AbilityCreator2
                         //Array.Resize(ref menutag, menutag.Length + 2);
                         //menutag[menutag.Length - 2] = newitem2;
                         //menutag[menutag.Length - 1] = newitm;
+
+                        listBox2.Items.AddRange(items);
+                        listBox2.DoubleClick += OnAddDoubleClick;
 
                         Array.Resize(ref newdata, newdata.Length + 1);
                         newdata[i - 2] = new object[] {  };
@@ -2603,8 +2704,11 @@ namespace D2AbilityCreator2
                         newbutton1.Size = new Size(100, 23);
                         newbutton1.Text = "Add";
                         newbutton1.Tag = newcombbox;
-                        newbutton1.Click += AddMyActionNode;
+                        newbutton1.Click += OnAddActionClick;
                         newbutton1.Parent = splitContainer1.Panel2;
+
+                        listBox2.Items.AddRange(ActionList);
+                        listBox2.DoubleClick += OnAddActionDoubleClick;
 
                         Array.Resize(ref newdata, newdata.Length + 1);
                         newdata[i - 2] = new object[] { };
@@ -2750,6 +2854,7 @@ namespace D2AbilityCreator2
 
         private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine("collapseAllToolStripMenuItem_Click");
             ClearPanels();
             treeView1.SelectedNode = null;
             treeView1.CollapseAll();
@@ -2757,6 +2862,7 @@ namespace D2AbilityCreator2
 
         private void expandAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine("expandAllToolStripMenuItem_Click");
             ClearPanels();
             treeView1.SelectedNode = null;
             treeView1.ExpandAll();
@@ -2769,6 +2875,7 @@ namespace D2AbilityCreator2
 
         private void saveTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine("saveTreeToolStripMenuItem_Click");
             ClearPanels();
             treeView1.SelectedNode = null;
             Stream myStream;
@@ -2830,10 +2937,11 @@ namespace D2AbilityCreator2
 
         private void splitContainer3_Panel2_SizeChanged(object sender, EventArgs e)
         {
-            ClearPanels();
-            TreeNode selnode = treeView1.SelectedNode;
-            treeView1.SelectedNode = null;
-            treeView1.SelectedNode = selnode;
+            //Debug.WriteLine("splitContainer3_Panel2_SizeChanged");
+            //ClearPanels();
+            //TreeNode selnode = treeView1.SelectedNode;
+            //treeView1.SelectedNode = null;
+            //treeView1.SelectedNode = selnode;
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
@@ -2948,6 +3056,15 @@ namespace D2AbilityCreator2
                         }
                     }
                 }
+            }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedItem != null)
+            {
+                File.Delete(blankspath + @"\" + listBox1.SelectedItem + ".txt");
+                UpdateBlankList();
             }
         }
     }
