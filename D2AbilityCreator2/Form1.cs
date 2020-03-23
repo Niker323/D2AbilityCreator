@@ -581,7 +581,7 @@ namespace D2AbilityCreator2
         object[] ActionPropertiesList = new object[] {
             new string[]{ "Target", "AbilityName" },
             new string[]{"Action"},
-            new string[]{ "Target", "ModifierName"},
+            new string[]{ "Target", "ModifierName", "Duration"},
             new string[]{ "Target", "ScriptFile", "HorizontalControlFunction", "VerticalControlFunction", "TestGravityFunc"},
             new string[]{ "EffectName", "EffectAttachType", "Target", "ControlPoints", "TargetPoint", "EffectRadius", "EffectDurationScale", "EffectLifeDurationScale", "EffectColorA", "EffectColorB", "EffectAlphaScale"},
             new string[]{"Target"},
@@ -775,14 +775,30 @@ namespace D2AbilityCreator2
                     }
                     if (data[i].GetType() == typeof(MyCheckboxStringString))
                     {
-                        MyCheckboxStringString thisdata = (MyCheckboxStringString)data[i];
-                        CheckBox mycheck = (CheckBox)elementdata[0];
-                        TextBox mytextbox = (TextBox)elementdata[1];
-                        TextBox mytextbox2 = (TextBox)elementdata[2];
-                        thisdata.check = mycheck.Checked;
-                        thisdata.str1 = mytextbox.Text;
-                        thisdata.str2 = mytextbox2.Text;
-                        data[i] = thisdata;
+                        //object[] ptag = (object[])neednode[0].Parent.Tag;
+                        //Debug.WriteLine(data[0]);
+                        //if ((string)data[0] == "AbilitySpecial")
+                        //{
+                        //    Debug.WriteLine(neednode[0].Nodes.Count);
+                        //    //eee;
+                        //    for (int x = 0; neednode[0].Nodes.Count > x; x++)
+                        //    {
+                        //        object[] ctag = (object[])neednode[0].Nodes[x].Tag;
+                        //        Debug.WriteLine(ctag.Length);
+                        //        Debug.WriteLine(ctag[0]);
+                        //    }
+                        //}
+                        //else
+                        //{
+                            MyCheckboxStringString thisdata = (MyCheckboxStringString)data[i];
+                            CheckBox mycheck = (CheckBox)elementdata[0];
+                            TextBox mytextbox = (TextBox)elementdata[1];
+                            TextBox mytextbox2 = (TextBox)elementdata[2];
+                            thisdata.check = mycheck.Checked;
+                            thisdata.str1 = mytextbox.Text;
+                            thisdata.str2 = mytextbox2.Text;
+                            data[i] = thisdata;
+                        //}
                     }
                     if (data[i].GetType() == typeof(MyCheckboxStringStringSelect))
                     {
@@ -1699,6 +1715,36 @@ namespace D2AbilityCreator2
             if (data.name == "AbilitySpecial")
             {
                 Array.Resize(ref tagdata, tagdata.Length + 1);
+                //tagdata[tagdata.Length - 2] = new MyCheckboxStringString() { check = true, name = "", str1 = data.data.ElementAt(i).Key, str2 = data.data.ElementAt(i).Value };
+                //for (int x = 0; e.Node.Nodes.Count > x; x++)
+                //{
+                //    object[] asdata = (object[])e.Node.Nodes[x].Tag;
+                //    //Debug.WriteLine(asdata.Length);
+                //    //Debug.WriteLine(asdata[3]);
+
+                //    MyCheckboxStringString thisdata = (MyCheckboxStringString)asdata[3];
+                //    CheckBox mycheck = new CheckBox();
+                //    mycheck.Location = new Point(10, (30 * (i + num)) + 6);
+                //    mycheck.AutoSize = true;
+                //    mycheck.Checked = thisdata.check;
+                //    mycheck.Parent = splitContainer1.Panel2;
+                //    TextBox mytextbox = new TextBox();
+                //    mytextbox.Text = thisdata.str1;
+                //    mytextbox.Location = new Point(30, (30 * (i + num)) + 3);
+                //    mytextbox.Size = new Size(400, 23);
+                //    mytextbox.Parent = splitContainer1.Panel2;
+                //    TextBox mytextbox2 = new TextBox();
+                //    mytextbox2.Text = thisdata.str2;
+                //    mytextbox2.Location = new Point(450, (30 * (i + num)) + 3);
+                //    mytextbox2.Size = new Size(400, 23);
+                //    mytextbox2.Parent = splitContainer1.Panel2;
+
+                //    //Array.Resize(ref newdata, newdata.Length + 1);
+                //    //newdata[i - 2] = new object[] { mycheck, mytextbox, mytextbox2 };
+
+                //    Array.Resize(ref newdata, newdata.Length + 1);
+                //    newdata[newdata.Length - 1] = new object[] { mycheck, mytextbox, mytextbox2 };
+                //}
                 tagdata[tagdata.Length - 1] = new MyAddAbilitySpecialNode();
             }
             if (data.name == "Action")
@@ -1770,6 +1816,8 @@ namespace D2AbilityCreator2
 
         public void AddAbilitySpecial(object sender, EventArgs e)
         {
+            //Debug.WriteLine("AddAbilitySpecial");
+            //ClearPanels();
             MyNodeData newnode = new MyNodeData();
             int nodecount = treeView1.SelectedNode.Nodes.Count;
             nodecount++;
@@ -1785,6 +1833,7 @@ namespace D2AbilityCreator2
             newnode.data["var_type"] = "";
             newnode.data[""] = "";
             AddAbilityDataByObject(newnode, treeView1.SelectedNode.Name);
+            //treeView1.SelectedNode = se
         }
 
         public void AddItemRequirements(object sender, EventArgs e)
@@ -2059,7 +2108,7 @@ namespace D2AbilityCreator2
             string readytext = miniotstup+'"' +(string)data[0]+'"'+ "\r\n"+ miniotstup + "{";
             if (level == 0)
             {
-                readytext = readytext + "\r\n" + otstup + "//Created by D2AbilityCreator 2.0";
+                readytext = readytext + "\r\n" + otstup + "//Created by D2AbilityCreator 2.1";
             }
             if ((string)data[1] == "ability")
                 readytext = readytext + "\r\n" + otstup + '"'+ "BaseClass" + '"'+ "\t\t" + '"' + "ability_datadriven" + '"';
@@ -2656,6 +2705,8 @@ namespace D2AbilityCreator2
 
                     if (data[i].GetType() == typeof(MyAddAbilitySpecialNode))
                     {
+                        //Debug.WriteLine(e.Node.Nodes.Count);
+                        //e.Node.Nodes
                         Button newbutton1 = new Button();
                         newbutton1.BackColor = Color.LightGray;
                         newbutton1.Location = new Point(30, (30 * (i - 2)) + 3);
